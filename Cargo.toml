@@ -2,5 +2,50 @@
 name = "discord_presence_status"
 version = "0.1.0"
 edition = "2024"
+rust-version = "1.95"
+description = "A lightweight desktop application to display custom Discord Rich Presence activities."
+license = "MIT"
+repository = "https://github.com/Yatsuuw/discord_presence_status"
+readme = "README.md"
+keywords = ["discord", "rich-presence", "status", "desktop", "windows"]
+categories = ["gui"]
+publish = false
+
+[[bin]]
+name = "discord_presence_status"
+path = "src/main.rs"
 
 [dependencies]
+discord-rich-presence = "1.1"
+eframe = { version = "0.37", default-features = false, features = ["accesskit", "clipboard", "default_fonts", "glow"] }
+egui_extras = { version = "0.37", default-features = false, features = ["file", "image"] }
+image = { version = "0.25", default-features = false, features = ["png", "jpeg", "webp"] }
+rfd = "0.18"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+toml = "1"
+
+[dev-dependencies]
+egui_kittest = { version = "0.37", features = ["eframe"] }
+tempfile = "3"
+
+[build-dependencies]
+winresource = "0.1"
+
+[lints.rust]
+missing_docs = "warn"
+unsafe_code = "forbid"
+
+[lints.clippy]
+all = { level = "warn", priority = -1 }
+pedantic = { level = "warn", priority = -1 }
+# The `ui` module exposes types such as `UiAction` on purpose.
+module_name_repetitions = "allow"
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "z"
+panic = "abort"
+strip = true
