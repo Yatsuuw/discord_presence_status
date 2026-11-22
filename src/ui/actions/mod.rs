@@ -4,6 +4,7 @@
 //! [`UiAction`](crate::ui::UiAction) to the matching function.
 
 mod apply_action;
+mod change_language;
 mod create_new_activity;
 mod delete_selected_activity;
 mod display_activity;
@@ -14,6 +15,7 @@ mod poll_presence_status;
 mod poll_tray_commands;
 mod quit_application;
 mod reload_activities;
+mod report_error;
 mod save_draft;
 mod select_activity;
 mod show_error;
@@ -25,6 +27,7 @@ mod stop_presence;
 mod sync_tray_menu;
 
 pub use apply_action::apply_action;
+pub use change_language::change_language;
 pub use create_new_activity::create_new_activity;
 pub use delete_selected_activity::delete_selected_activity;
 pub use display_activity::display_activity;
@@ -35,6 +38,7 @@ pub use poll_presence_status::poll_presence_status;
 pub use poll_tray_commands::poll_tray_commands;
 pub use quit_application::quit_application;
 pub use reload_activities::reload_activities;
+pub use report_error::report_error;
 pub use save_draft::save_draft;
 pub use select_activity::select_activity;
 pub use show_error::show_error;

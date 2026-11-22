@@ -33,7 +33,7 @@ pub fn sync_presence(state: &mut WorkerState) -> Option<PresenceStatus> {
             state.pending = true;
             Some(PresenceStatus::Waiting {
                 activity_name,
-                reason: error.to_string(),
+                error,
             })
         }
         Err(error @ PresenceError::Rejected(_)) => {
@@ -41,7 +41,7 @@ pub fn sync_presence(state: &mut WorkerState) -> Option<PresenceStatus> {
             state.rejected = true;
             Some(PresenceStatus::Rejected {
                 activity_name,
-                reason: error.to_string(),
+                error,
             })
         }
     }

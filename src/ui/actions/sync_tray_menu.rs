@@ -1,5 +1,6 @@
 //! Refresh of the tray menu and tooltip.
 
+use crate::i18n::{fill_placeholders, translations_for};
 use crate::ui::actions::show_error;
 use crate::ui::state::PresenceApp;
 use crate::ui::tray::{build_tray_menu, build_tray_menu_model};
@@ -9,7 +10,7 @@ use crate::ui::tray::{build_tray_menu, build_tray_menu_model};
 ///
 /// Does nothing when the application runs without a tray icon.
 pub fn sync_tray_menu(app: &mut PresenceApp) {
-    let model = build_tray_menu_model(&app.activities, app.active.as_ref());
+    let model = build_tray_menu_model(&app.activities, app.active.as_ref(), app.language);
     let Some(tray) = app.tray.as_mut() else {
         return;
     };
@@ -25,6 +26,8 @@ pub fn sync_tray_menu(app: &mut PresenceApp) {
     tray.shown_model = Some(model);
 
     if let Err(error) = result {
-        show_error(app, format!("cannot update the tray menu: {error}"));
+        let texts = translations_for(app.language);
+        let text = fill_placeholders(texts.error_tray_menu, &[("detail", &error.to_string())]);
+        show_error(app, text);
     }
 }

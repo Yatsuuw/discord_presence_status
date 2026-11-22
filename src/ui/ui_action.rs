@@ -2,6 +2,8 @@
 
 use std::path::PathBuf;
 
+use crate::i18n::Language;
+
 /// An action triggered by the user, produced by the views and applied by
 /// [`apply_action`](crate::ui::actions::apply_action).
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -39,4 +41,6 @@ pub enum UiAction {
     HideToTray,
     /// Clear the presence and close the application (tray menu).
     Quit,
+    /// Display the interface in this language and remember the choice.
+    ChangeLanguage(Language),
 }

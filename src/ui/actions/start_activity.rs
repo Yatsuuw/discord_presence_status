@@ -2,7 +2,8 @@
 
 use std::path::Path;
 
-use crate::ui::actions::{display_activity, show_error};
+use crate::i18n::translations_for;
+use crate::ui::actions::{display_activity, reload_activities, show_error};
 use crate::ui::state::PresenceApp;
 
 /// Asks Discord to display the saved activity stored in `folder`.
@@ -15,14 +16,10 @@ pub fn start_activity(app: &mut PresenceApp, folder: &Path) {
         .iter()
         .find(|stored| stored.folder == folder)
         .cloned();
-    match stored {
-        Some(stored) => display_activity(app, stored),
-        None => show_error(
-            app,
-            format!(
-                "the activity in \"{}\" no longer exists; click Reload",
-                folder.display()
-            ),
-        ),
+    if let Some(stored) = stored {
+        display_activity(app, stored);
+    } else {
+        reload_activities(app);
+        show_error(app, translations_for(app.language).notice_activity_missing);
     }
 }

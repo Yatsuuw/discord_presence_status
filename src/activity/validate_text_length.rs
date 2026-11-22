@@ -1,6 +1,6 @@
 //! Length check shared by every optional text field.
 
-use crate::activity::ValidationError;
+use crate::activity::{TextField, ValidationError};
 
 /// Checks that an optional text has between `min` and `max` characters.
 ///
@@ -12,7 +12,7 @@ use crate::activity::ValidationError;
 ///
 /// Returns [`ValidationError::InvalidLength`] when the text is out of bounds.
 pub fn validate_text_length(
-    field: &'static str,
+    field: TextField,
     value: Option<&str>,
     min: usize,
     max: usize,

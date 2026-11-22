@@ -14,6 +14,9 @@ pub const ACTIVITIES_FOLDER_NAME: &str = "user_activity";
 /// Name of the file describing an activity inside its own folder.
 pub const ACTIVITY_FILE_NAME: &str = "activity.toml";
 
+/// Name of the file holding the user preferences, in the data root.
+pub const SETTINGS_FILE_NAME: &str = "settings.toml";
+
 /// File stem used for the local image copied into an activity folder.
 pub const ACTIVITY_IMAGE_STEM: &str = "image";
 

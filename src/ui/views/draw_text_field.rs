@@ -2,13 +2,16 @@
 
 use eframe::egui::{self, TextEdit};
 
-/// Draws a label and a single-line text field as one row of a two-column grid.
-///
-/// The label is linked to the field so screen readers announce it.
+use crate::ui::views::draw_field_label;
+
+/// Draws a label with its help icon and a single-line text field, as one
+/// row of a two-column grid.
 ///
 /// * `hint`: greyed text shown while the field is empty;
-/// * `help`: explanation shown when hovering the label or the field;
+/// * `help`: explanation shown when hovering the icon, the label or the field;
 /// * `max_characters`: the field refuses longer input.
+///
+/// The label is linked to the field so screen readers announce it.
 pub fn draw_text_field(
     ui: &mut egui::Ui,
     label: &str,
@@ -17,7 +20,7 @@ pub fn draw_text_field(
     help: &str,
     max_characters: usize,
 ) {
-    let label = ui.label(label).on_hover_text(help);
+    let label = draw_field_label(ui, label, help);
     ui.add(
         TextEdit::singleline(value)
             .hint_text(hint)

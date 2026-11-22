@@ -2,9 +2,10 @@
 
 use eframe::egui;
 
+use crate::i18n::{fill_placeholders, translations_for};
 use crate::presence::{PresenceCommand, PresenceRequest};
 use crate::storage::{StoredActivity, save_activity};
-use crate::ui::actions::{reload_activities, show_error, show_success};
+use crate::ui::actions::{reload_activities, report_error, show_success};
 use crate::ui::state::{PresenceApp, draft_from_stored, draft_to_activity};
 
 /// Saves the activity open in the editor and returns it on success.
@@ -25,7 +26,7 @@ pub fn save_draft(app: &mut PresenceApp, context: &egui::Context) -> Option<Stor
     let stored = match result {
         Ok(stored) => stored,
         Err(error) => {
-            show_error(app, error);
+            report_error(app, &error);
             return None;
         }
     };
@@ -48,6 +49,10 @@ pub fn save_draft(app: &mut PresenceApp, context: &egui::Context) -> Option<Stor
 
     reload_activities(app);
     app.draft = Some(draft_from_stored(&stored));
-    show_success(app, format!("\"{}\" saved.", stored.activity.name));
+    let texts = translations_for(app.language);
+    show_success(
+        app,
+        fill_placeholders(texts.notice_saved, &[("name", &stored.activity.name)]),
+    );
     Some(stored)
 }

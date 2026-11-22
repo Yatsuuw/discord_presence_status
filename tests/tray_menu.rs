@@ -4,6 +4,7 @@ use std::path::PathBuf;
 
 use discord_presence_status::activity::Activity;
 use discord_presence_status::constants::APP_DISPLAY_NAME;
+use discord_presence_status::i18n::{ENGLISH, Language};
 use discord_presence_status::storage::StoredActivity;
 use discord_presence_status::ui::state::ActivePresence;
 use discord_presence_status::ui::tray::{
@@ -57,7 +58,7 @@ fn lists_every_activity_and_marks_the_displayed_one() {
         started_at_millis: 0,
     };
 
-    let model = build_tray_menu_model(&activities, Some(&active));
+    let model = build_tray_menu_model(&activities, Some(&active), Language::English);
 
     assert_eq!(
         model.activities,
@@ -75,12 +76,12 @@ fn lists_every_activity_and_marks_the_displayed_one() {
         ]
     );
     assert!(model.can_stop);
-    assert_eq!(model.tooltip, tray_tooltip(Some("Gaming")));
+    assert_eq!(model.tooltip, tray_tooltip(Some("Gaming"), &ENGLISH));
 }
 
 #[test]
 fn cannot_stop_when_nothing_is_displayed() {
-    let model = build_tray_menu_model(&[stored("Coding")], None);
+    let model = build_tray_menu_model(&[stored("Coding")], None, Language::English);
 
     assert!(!model.can_stop);
     assert!(model.activities.iter().all(|entry| !entry.is_active));
@@ -90,12 +91,15 @@ fn cannot_stop_when_nothing_is_displayed() {
 #[test]
 fn tooltip_names_the_displayed_activity_and_stays_short() {
     assert_eq!(
-        tray_tooltip(Some("Coding")),
+        tray_tooltip(Some("Coding"), &ENGLISH),
         format!("{APP_DISPLAY_NAME}\nDisplaying \"Coding\"")
     );
 
     let long_name = "x".repeat(200);
-    assert_eq!(tray_tooltip(Some(&long_name)).chars().count(), 120);
+    assert_eq!(
+        tray_tooltip(Some(&long_name), &ENGLISH).chars().count(),
+        120
+    );
 }
 
 #[test]
@@ -107,8 +111,8 @@ fn ampersands_are_shown_as_typed() {
 #[test]
 fn builds_the_native_menu() {
     let activities = [stored("Coding"), stored("Rock & Roll")];
-    let empty = build_tray_menu_model(&[], None);
-    let full = build_tray_menu_model(&activities, None);
+    let empty = build_tray_menu_model(&[], None, Language::English);
+    let full = build_tray_menu_model(&activities, None, Language::English);
 
     assert!(build_tray_menu(&empty).is_ok());
     let menu = build_tray_menu(&full).expect("menu");

@@ -4,32 +4,23 @@ use eframe::egui::{self, ComboBox, Grid};
 
 use crate::activity::ActivityKind;
 use crate::constants::{MAX_IMAGE_REFERENCE_LENGTH, MAX_PRESENCE_TEXT_LENGTH};
+use crate::i18n::{Translations, activity_kind_label};
 use crate::ui::UiAction;
-use crate::ui::state::{ActivityDraft, activity_kind_label};
-use crate::ui::views::{draw_image_picker, draw_text_field};
+use crate::ui::state::ActivityDraft;
+use crate::ui::views::{draw_field_label, draw_image_picker, draw_text_field};
 
 /// Longest Discord application ID, in digits.
 const MAX_APPLICATION_ID_LENGTH: usize = 20;
 
-/// Help texts of the form fields.
-const NAME_HELP: &str = "The name Discord displays, e.g. \"Playing Rust programming\". \
-Tip: give your Discord application the same name.";
-const APPLICATION_ID_HELP: &str = "Create an application in the Discord Developer Portal, \
-then copy its \"Application ID\" here.";
-const KIND_HELP: &str = "The verb Discord puts in front of the name.";
-const DETAILS_HELP: &str = "First line under the name (your description). Optional.";
-const STATE_HELP: &str = "Second line under the description. Optional.";
-const IMAGE_HELP: &str = "The key of an image uploaded in the Developer Portal \
-(Rich Presence > Art Assets), or a public https:// image URL. Optional.";
-const TOOLTIP_HELP: &str = "Text shown when hovering the image on Discord. Optional.";
-const LOCAL_IMAGE_HELP: &str = "A copy of the image kept in the activity folder, \
-shown here for reference. Discord cannot read files from your computer: \
-use the \"Discord image\" field for what Discord displays.";
-
 /// Draws every field of the activity form, editing `draft` in place.
 ///
+/// Each label is followed by a "(?)" icon explaining what to enter.
 /// Returns [`UiAction::PickImage`] when the user wants to choose an image.
-pub fn draw_activity_form(ui: &mut egui::Ui, draft: &mut ActivityDraft) -> Option<UiAction> {
+pub fn draw_activity_form(
+    ui: &mut egui::Ui,
+    draft: &mut ActivityDraft,
+    texts: &Translations,
+) -> Option<UiAction> {
     let mut action = None;
 
     Grid::new("activity_form")
@@ -38,68 +29,73 @@ pub fn draw_activity_form(ui: &mut egui::Ui, draft: &mut ActivityDraft) -> Optio
         .show(ui, |ui| {
             draw_text_field(
                 ui,
-                "Name *",
+                texts.field_name,
                 &mut draft.name,
-                "e.g. Rust programming",
-                NAME_HELP,
+                texts.hint_name,
+                texts.help_name,
                 MAX_PRESENCE_TEXT_LENGTH,
             );
             draw_text_field(
                 ui,
-                "Application ID *",
+                texts.field_application_id,
                 &mut draft.application_id,
-                "e.g. 123456789012345678",
-                APPLICATION_ID_HELP,
+                texts.hint_application_id,
+                texts.help_application_id,
                 MAX_APPLICATION_ID_LENGTH,
             );
 
-            let kind_label = ui.label("Activity type").on_hover_text(KIND_HELP);
+            let kind_label = draw_field_label(ui, texts.field_kind, texts.help_kind);
             ComboBox::from_id_salt("activity_kind")
-                .selected_text(activity_kind_label(draft.kind))
+                .selected_text(activity_kind_label(draft.kind, texts))
                 .show_ui(ui, |ui| {
                     for kind in ActivityKind::ALL {
-                        ui.selectable_value(&mut draft.kind, kind, activity_kind_label(kind));
+                        ui.selectable_value(
+                            &mut draft.kind,
+                            kind,
+                            activity_kind_label(kind, texts),
+                        );
                     }
                 })
                 .response
+                .on_hover_text(texts.help_kind)
                 .labelled_by(kind_label.id);
             ui.end_row();
 
             draw_text_field(
                 ui,
-                "Description",
+                texts.field_details,
                 &mut draft.details,
-                "First line under the name",
-                DETAILS_HELP,
+                texts.hint_details,
+                texts.help_details,
                 MAX_PRESENCE_TEXT_LENGTH,
             );
             draw_text_field(
                 ui,
-                "Second line",
+                texts.field_state,
                 &mut draft.state,
-                "Optional",
-                STATE_HELP,
+                texts.hint_state,
+                texts.help_state,
                 MAX_PRESENCE_TEXT_LENGTH,
             );
             draw_text_field(
                 ui,
-                "Discord image",
+                texts.field_large_image,
                 &mut draft.large_image,
-                "Asset key or https:// URL",
-                IMAGE_HELP,
+                texts.hint_large_image,
+                texts.help_large_image,
                 MAX_IMAGE_REFERENCE_LENGTH,
             );
             draw_text_field(
                 ui,
-                "Image tooltip",
+                texts.field_large_text,
                 &mut draft.large_text,
-                "Shown when hovering the image",
-                TOOLTIP_HELP,
+                texts.hint_large_text,
+                texts.help_large_text,
                 MAX_PRESENCE_TEXT_LENGTH,
             );
 
-            ui.label("Local image").on_hover_text(LOCAL_IMAGE_HELP);
-            action = draw_image_picker(ui, draft);
+            draw_field_label(ui, texts.field_local_image, texts.help_local_image);
+            action = draw_image_picker(ui, draft, texts);
             ui.end_row();
         });
 

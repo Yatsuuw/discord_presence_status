@@ -24,6 +24,7 @@
 #define AppUrl "https://github.com/Yatsuuw/discord_presence_status"
 #define AppExeName "discord_presence_status.exe"
 #define DataFolderName "user_activity"
+#define SettingsFileName "settings.toml"
 
 [Setup]
 ; Never change AppId: Windows uses it to recognise upgrades and uninstalls.
@@ -63,8 +64,8 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "french"; MessagesFile: "compiler:Languages\French.isl"
 
 [CustomMessages]
-english.DeleteUserData=Do you also want to delete your activities?%n%n%1%n%nChoose "No" to keep them for a future installation.
-french.DeleteUserData=Voulez-vous aussi supprimer vos activités ?%n%n%1%n%nChoisissez « Non » pour les conserver pour une future installation.
+english.DeleteUserData=Do you also want to delete your activities and preferences?%n%n%1%n%nChoose "No" to keep them for a future installation.
+french.DeleteUserData=Voulez-vous aussi supprimer vos activités et vos préférences ?%n%n%1%n%nChoisissez « Non » pour les conserver pour une future installation.
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
@@ -91,7 +92,7 @@ begin
     Result := ExpandConstant('{app}\{#DataFolderName}');
 end;
 
-{ Offers to delete the user's activities once the program files are removed.
+{ Offers to delete the user's activities and preferences once the program files are removed.
   Silent uninstalls keep the data (default answer: No). }
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 var
@@ -108,6 +109,9 @@ begin
                         mbConfirmation, MB_YESNO or MB_DEFBUTTON2, IDNO) = IDYES then
   begin
     DelTree(Folder, True, True, True);
+    { In per-user mode the preferences sit next to the executable
+      (src/settings/settings_file_path.rs); machine-wide, they were inside Folder. }
+    DeleteFile(ExpandConstant('{app}\{#SettingsFileName}'));
     { Remove the now empty installation folder in per-user mode. }
     RemoveDir(ExpandConstant('{app}'));
   end;

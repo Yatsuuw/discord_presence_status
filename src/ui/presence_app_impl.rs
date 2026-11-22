@@ -4,6 +4,7 @@ use std::time::Duration;
 
 use eframe::egui::{self, CentralPanel, Panel};
 
+use crate::i18n::translations_for;
 use crate::presence::{PresenceStatus, shutdown_presence_worker};
 use crate::ui::UiAction;
 use crate::ui::actions::{apply_action, poll_presence_status, poll_tray_commands, sync_tray_menu};
@@ -26,14 +27,18 @@ impl eframe::App for PresenceApp {
         let mut actions: Vec<UiAction> = poll_tray_commands(self);
         actions.extend(detect_hide_to_tray(ui.ctx(), self));
         let active_folder = self.active.as_ref().map(|active| active.folder.clone());
+        let texts = translations_for(self.language);
 
-        Panel::top("header").show(ui, |ui| draw_header(ui, &self.status));
+        Panel::top("header").show(ui, |ui| {
+            actions.extend(draw_header(ui, &self.status, self.language, texts));
+        });
 
         Panel::bottom("footer").show(ui, |ui| {
             actions.extend(draw_footer(
                 ui,
                 self.notice.as_ref(),
                 &self.activities_directory,
+                texts,
             ));
         });
 
@@ -50,20 +55,21 @@ impl eframe::App for PresenceApp {
                     &self.load_errors,
                     selected,
                     active_folder.as_deref(),
+                    texts,
                 ));
             });
 
         CentralPanel::default_margins().show(ui, |ui| match &mut self.draft {
             Some(draft) => {
                 let is_active = draft.folder.is_some() && draft.folder == active_folder;
-                actions.extend(draw_activity_editor(ui, draft, is_active));
+                actions.extend(draw_activity_editor(ui, draft, is_active, texts));
             }
-            None => actions.extend(draw_welcome(ui)),
+            None => actions.extend(draw_welcome(ui, texts)),
         });
 
         if self.delete_requested {
             let name = self.draft.as_ref().map_or("", |draft| draft.name.as_str());
-            actions.extend(draw_delete_dialog(ui.ctx(), name));
+            actions.extend(draw_delete_dialog(ui.ctx(), name, texts));
         }
 
         for action in actions {

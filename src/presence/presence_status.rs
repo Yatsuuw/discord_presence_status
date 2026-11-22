@@ -1,5 +1,7 @@
 //! Definition of [`PresenceStatus`], the state reported by the worker.
 
+use crate::presence::PresenceError;
+
 /// The state of the Discord presence, as reported to the user interface.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub enum PresenceStatus {
@@ -18,13 +20,13 @@ pub enum PresenceStatus {
         /// Name of the activity waiting to be displayed.
         activity_name: String,
         /// Why Discord could not be reached.
-        reason: String,
+        error: PresenceError,
     },
     /// Discord refused the activity; the worker stops trying until the next command.
     Rejected {
         /// Name of the refused activity.
         activity_name: String,
-        /// The reason given by Discord.
-        reason: String,
+        /// The refusal, with the reason given by Discord.
+        error: PresenceError,
     },
 }

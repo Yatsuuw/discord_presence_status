@@ -1,6 +1,7 @@
 //! Text shown when hovering the tray icon.
 
 use crate::constants::APP_DISPLAY_NAME;
+use crate::i18n::{Translations, fill_placeholders};
 
 /// Longest tooltip kept, in characters.
 ///
@@ -11,9 +12,12 @@ const MAX_TOOLTIP_LENGTH: usize = 120;
 /// Returns the tray tooltip: the application name, followed by the
 /// displayed activity when there is one.
 #[must_use]
-pub fn tray_tooltip(active_name: Option<&str>) -> String {
+pub fn tray_tooltip(active_name: Option<&str>, texts: &Translations) -> String {
     let text = match active_name {
-        Some(name) => format!("{APP_DISPLAY_NAME}\nDisplaying \"{name}\""),
+        Some(name) => format!(
+            "{APP_DISPLAY_NAME}\n{}",
+            fill_placeholders(texts.tray_displaying, &[("name", name)])
+        ),
         None => APP_DISPLAY_NAME.to_owned(),
     };
     text.chars().take(MAX_TOOLTIP_LENGTH).collect()

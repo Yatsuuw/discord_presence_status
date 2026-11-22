@@ -2,7 +2,6 @@
 
 mod active_presence;
 mod activity_draft;
-mod activity_kind_label;
 mod draft_from_stored;
 mod draft_to_activity;
 mod keeps_running_in_tray;
@@ -13,7 +12,6 @@ mod presence_app;
 
 pub use active_presence::ActivePresence;
 pub use activity_draft::ActivityDraft;
-pub use activity_kind_label::activity_kind_label;
 pub use draft_from_stored::draft_from_stored;
 pub use draft_to_activity::draft_to_activity;
 pub use keeps_running_in_tray::keeps_running_in_tray;

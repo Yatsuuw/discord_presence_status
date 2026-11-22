@@ -40,6 +40,20 @@ pub enum AppError {
         source: toml::de::Error,
     },
 
+    /// The `settings.toml` file exists but cannot be understood.
+    #[error("invalid settings file \"{}\": {source}", path.display())]
+    SettingsParse {
+        /// The file that could not be parsed.
+        path: PathBuf,
+        /// The underlying TOML error.
+        #[source]
+        source: toml::de::Error,
+    },
+
+    /// The preferences could not be converted to TOML.
+    #[error("cannot serialize the settings: {0}")]
+    SettingsSerialize(#[source] toml::ser::Error),
+
     /// An activity could not be converted to TOML.
     #[error("cannot serialize the activity: {0}")]
     ActivitySerialize(#[from] toml::ser::Error),

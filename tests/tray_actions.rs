@@ -20,7 +20,7 @@ fn app_with_fake_worker(
     context: &egui::Context,
     folder: &Path,
 ) -> (PresenceApp, mpsc::Receiver<PresenceCommand>) {
-    let mut app = build_presence_app(context, folder.to_path_buf()).expect("build the app");
+    let mut app = build_presence_app(context, folder).expect("build the app");
     let (commands, received) = mpsc::channel();
     let (_statuses_sender, statuses) = mpsc::channel();
     app.presence = PresenceHandle {
@@ -62,7 +62,7 @@ fn starts_a_saved_activity_without_opening_it() {
         application_id: "123456789012345678".to_owned(),
         ..Activity::default()
     };
-    let stored = save_activity(root.path(), activity, None, None).expect("save");
+    let stored = save_activity(&app.activities_directory, activity, None, None).expect("save");
     reload_activities(&mut app);
 
     apply_action(

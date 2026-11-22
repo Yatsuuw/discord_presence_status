@@ -3,7 +3,7 @@
 use std::process::Command;
 
 use crate::storage::ensure_directory;
-use crate::ui::actions::show_error;
+use crate::ui::actions::report_error;
 use crate::ui::state::PresenceApp;
 
 /// Program used to open a folder on the current operating system.
@@ -26,6 +26,6 @@ pub fn open_activities_folder(app: &mut PresenceApp) {
             .map_err(crate::error::io_error_at(&folder))
     });
     if let Err(error) = result {
-        show_error(app, error);
+        report_error(app, &error);
     }
 }

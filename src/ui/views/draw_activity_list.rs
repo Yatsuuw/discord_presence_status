@@ -4,6 +4,7 @@ use std::path::Path;
 
 use eframe::egui::{self, Align, Button, Layout, RichText, ScrollArea};
 
+use crate::i18n::Translations;
 use crate::storage::StoredActivity;
 use crate::ui::UiAction;
 use crate::ui::views::{ERROR_COLOR, SUCCESS_COLOR};
@@ -21,16 +22,17 @@ pub fn draw_activity_list(
     load_errors: &[String],
     selected: Option<&Path>,
     active: Option<&Path>,
+    texts: &Translations,
 ) -> Option<UiAction> {
     let mut action = None;
 
     ui.add_space(8.0);
     ui.horizontal(|ui| {
-        ui.strong("Activities");
+        ui.strong(texts.activities_heading);
         ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
             if ui
-                .small_button("Reload")
-                .on_hover_text("Read the activities folder again")
+                .small_button(texts.reload_button)
+                .on_hover_text(texts.reload_help)
                 .clicked()
             {
                 action = Some(UiAction::Reload);
@@ -39,9 +41,10 @@ pub fn draw_activity_list(
     });
     ui.add_space(4.0);
 
-    let new_button = Button::new("+ New activity");
+    let new_button = Button::new(texts.new_activity_button);
     if ui
         .add_sized([ui.available_width(), NEW_BUTTON_HEIGHT], new_button)
+        .on_hover_text(texts.new_activity_help)
         .clicked()
     {
         action = Some(UiAction::NewActivity);
@@ -51,13 +54,14 @@ pub fn draw_activity_list(
     ScrollArea::vertical().show(ui, |ui| {
         ui.with_layout(Layout::top_down_justified(Align::LEFT), |ui| {
             if activities.is_empty() {
-                ui.weak("No activity yet. Create your first one!");
+                ui.weak(texts.no_activity_yet);
             }
             for stored in activities {
                 let is_selected = selected == Some(stored.folder.as_path());
                 let is_active = active == Some(stored.folder.as_path());
                 let text = if is_active {
-                    RichText::new(format!("{}  (live)", stored.activity.name)).color(SUCCESS_COLOR)
+                    RichText::new(format!("{}  {}", stored.activity.name, texts.live_marker))
+                        .color(SUCCESS_COLOR)
                 } else {
                     RichText::new(&stored.activity.name)
                 };

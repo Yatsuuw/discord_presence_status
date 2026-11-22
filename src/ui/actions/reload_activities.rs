@@ -1,7 +1,8 @@
 //! Reloading of the activity list from disk.
 
+use crate::i18n::{describe_app_error, translations_for};
 use crate::storage::load_activities;
-use crate::ui::actions::show_error;
+use crate::ui::actions::report_error;
 use crate::ui::state::PresenceApp;
 
 /// Reads the activities folder again and refreshes the list.
@@ -16,9 +17,9 @@ pub fn reload_activities(app: &mut PresenceApp) {
             app.load_errors = failed
                 .into_iter()
                 .filter_map(Result::err)
-                .map(|error| error.to_string())
+                .map(|error| describe_app_error(&error, translations_for(app.language)))
                 .collect();
         }
-        Err(error) => show_error(app, error),
+        Err(error) => report_error(app, &error),
     }
 }

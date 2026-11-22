@@ -2,6 +2,8 @@
 
 use thiserror::Error;
 
+use crate::activity::TextField;
+
 /// Why an [`Activity`](crate::activity::Activity) cannot be saved or shown.
 #[derive(Debug, Clone, PartialEq, Eq, Error)]
 pub enum ValidationError {
@@ -20,8 +22,8 @@ pub enum ValidationError {
     /// A text field is too short or too long for Discord.
     #[error("{field} must be between {min} and {max} characters long")]
     InvalidLength {
-        /// Human-readable name of the field.
-        field: &'static str,
+        /// The field that is too short or too long.
+        field: TextField,
         /// Minimum accepted length, in characters.
         min: usize,
         /// Maximum accepted length, in characters.

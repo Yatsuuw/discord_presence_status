@@ -4,9 +4,9 @@ use eframe::egui;
 
 use crate::ui::UiAction;
 use crate::ui::actions::{
-    create_new_activity, delete_selected_activity, hide_to_tray, open_activities_folder,
-    pick_image, quit_application, reload_activities, save_draft, select_activity, show_window,
-    start_activity, start_selected_activity, stop_presence,
+    change_language, create_new_activity, delete_selected_activity, hide_to_tray,
+    open_activities_folder, pick_image, quit_application, reload_activities, save_draft,
+    select_activity, show_window, start_activity, start_selected_activity, stop_presence,
 };
 use crate::ui::state::PresenceApp;
 
@@ -31,5 +31,6 @@ pub fn apply_action(app: &mut PresenceApp, action: UiAction, context: &egui::Con
         UiAction::ShowWindow => show_window(app, context),
         UiAction::HideToTray => hide_to_tray(app, context),
         UiAction::Quit => quit_application(app, context),
+        UiAction::ChangeLanguage(language) => change_language(app, language),
     }
 }

@@ -1,7 +1,8 @@
 //! Deletion of the activity open in the editor.
 
+use crate::i18n::{fill_placeholders, translations_for};
 use crate::storage::delete_activity;
-use crate::ui::actions::{reload_activities, show_error, show_success, stop_presence};
+use crate::ui::actions::{reload_activities, report_error, show_success, stop_presence};
 use crate::ui::state::PresenceApp;
 
 /// Permanently deletes the activity open in the editor (after confirmation).
@@ -26,8 +27,14 @@ pub fn delete_selected_activity(app: &mut PresenceApp) {
     }
 
     match delete_activity(&app.activities_directory, &folder) {
-        Ok(()) => show_success(app, format!("\"{}\" deleted.", draft.name)),
-        Err(error) => show_error(app, error),
+        Ok(()) => {
+            let texts = translations_for(app.language);
+            show_success(
+                app,
+                fill_placeholders(texts.notice_deleted, &[("name", &draft.name)]),
+            );
+        }
+        Err(error) => report_error(app, &error),
     }
     reload_activities(app);
 }

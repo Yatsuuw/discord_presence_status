@@ -1,14 +1,17 @@
 //! Description of the tray menu from the application state.
 
+use crate::i18n::{Language, translations_for};
 use crate::storage::StoredActivity;
 use crate::ui::state::ActivePresence;
 use crate::ui::tray::{TrayMenuEntry, TrayMenuModel, tray_tooltip};
 
-/// Describes the tray menu for these `activities`, marking the `active` one.
+/// Describes the tray menu for these `activities`, marking the `active`
+/// one, with labels in `language`.
 #[must_use]
 pub fn build_tray_menu_model(
     activities: &[StoredActivity],
     active: Option<&ActivePresence>,
+    language: Language,
 ) -> TrayMenuModel {
     let entries: Vec<TrayMenuEntry> = activities
         .iter()
@@ -25,7 +28,8 @@ pub fn build_tray_menu_model(
         .map(|entry| entry.name.as_str());
 
     TrayMenuModel {
-        tooltip: tray_tooltip(active_name),
+        language,
+        tooltip: tray_tooltip(active_name, translations_for(language)),
         can_stop: active.is_some(),
         activities: entries,
     }

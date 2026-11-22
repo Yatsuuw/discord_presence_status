@@ -1,7 +1,7 @@
 //! Validation of a complete [`Activity`].
 
 use crate::activity::{
-    Activity, ValidationError, is_valid_application_id, sanitize_folder_name,
+    Activity, TextField, ValidationError, is_valid_application_id, sanitize_folder_name,
     validate_image_reference, validate_text_length,
 };
 use crate::constants::{MAX_PRESENCE_TEXT_LENGTH, MIN_PRESENCE_TEXT_LENGTH};
@@ -20,7 +20,7 @@ pub fn validate_activity(activity: &Activity) -> Result<(), ValidationError> {
         return Err(ValidationError::MissingName);
     }
     validate_text_length(
-        "The activity name",
+        TextField::Name,
         Some(name),
         MIN_PRESENCE_TEXT_LENGTH,
         MAX_PRESENCE_TEXT_LENGTH,
@@ -34,9 +34,9 @@ pub fn validate_activity(activity: &Activity) -> Result<(), ValidationError> {
     }
 
     let text_fields = [
-        ("The description", activity.details.as_deref()),
-        ("The second line", activity.state.as_deref()),
-        ("The image tooltip", activity.large_text.as_deref()),
+        (TextField::Details, activity.details.as_deref()),
+        (TextField::State, activity.state.as_deref()),
+        (TextField::ImageTooltip, activity.large_text.as_deref()),
     ];
     for (field, value) in text_fields {
         validate_text_length(

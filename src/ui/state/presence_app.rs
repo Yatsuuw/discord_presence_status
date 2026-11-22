@@ -2,6 +2,7 @@
 
 use std::path::PathBuf;
 
+use crate::i18n::Language;
 use crate::presence::{PresenceHandle, PresenceStatus};
 use crate::storage::StoredActivity;
 use crate::ui::state::{ActivePresence, ActivityDraft, Notice};
@@ -12,6 +13,10 @@ use crate::ui::tray::SystemTray;
 pub struct PresenceApp {
     /// The `user_activity/` folder in use.
     pub activities_directory: PathBuf,
+    /// The `settings.toml` file holding the user preferences.
+    pub settings_path: PathBuf,
+    /// Language of the interface.
+    pub language: Language,
     /// Activities successfully loaded from disk, sorted by name.
     pub activities: Vec<StoredActivity>,
     /// Messages describing activity folders that could not be loaded.

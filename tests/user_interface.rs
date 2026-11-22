@@ -12,7 +12,7 @@ fn harness(activities: &std::path::Path) -> Harness<'static, PresenceApp> {
     Harness::builder()
         .with_size([900.0, 640.0])
         .build_eframe(move |creation_context| {
-            build_presence_app(&creation_context.egui_ctx, folder).expect("build the app")
+            build_presence_app(&creation_context.egui_ctx, &folder).expect("build the app")
         })
 }
 
@@ -45,7 +45,7 @@ fn creates_saves_and_deletes_an_activity() {
     harness.get_by_label("Save").click();
     harness.run();
 
-    let folder = root.path().join("Rust programming");
+    let folder = root.path().join("user_activity").join("Rust programming");
     let saved = read_activity_file(&folder).expect("activity saved on disk");
     assert_eq!(saved.application_id, "123456789012345678");
     assert_eq!(saved.details.as_deref(), Some("Building a desktop app"));
@@ -84,6 +84,63 @@ fn shows_validation_errors_instead_of_saving() {
     harness.get_by_label("Save").click();
     harness.run();
 
-    harness.get_by_label("the activity name is required");
-    assert_eq!(std::fs::read_dir(root.path()).expect("list").count(), 0);
+    harness.get_by_label("The activity name is required.");
+    assert_eq!(
+        std::fs::read_dir(root.path().join("user_activity"))
+            .expect("list")
+            .count(),
+        0
+    );
+}
+
+#[test]
+fn switches_to_french_and_remembers_it() {
+    let root = tempfile::tempdir().expect("temporary folder");
+    {
+        let mut harness = harness(root.path());
+        harness.run();
+        harness.get_by_label("Show the world what you are up to");
+
+        harness.get_by_label("Language").click();
+        harness.run();
+        harness.get_by_label("Français").click();
+        harness.run();
+
+        harness.get_by_label("Montrez au monde ce que vous faites");
+    }
+
+    let settings =
+        std::fs::read_to_string(root.path().join("settings.toml")).expect("settings saved");
+    assert!(settings.contains("language = \"fr\""), "{settings}");
+
+    let mut restarted = harness(root.path());
+    restarted.run();
+    restarted.get_by_label("Montrez au monde ce que vous faites");
+}
+
+#[test]
+fn explains_every_field_with_a_help_icon() {
+    let root = tempfile::tempdir().expect("temporary folder");
+    let mut harness = harness(root.path());
+    harness.run();
+    harness
+        .get_all_by_label("+ New activity")
+        .next()
+        .expect("button")
+        .click();
+    harness.run();
+
+    let texts = discord_presence_status::i18n::ENGLISH;
+    for help in [
+        texts.help_name,
+        texts.help_application_id,
+        texts.help_kind,
+        texts.help_details,
+        texts.help_state,
+        texts.help_large_image,
+        texts.help_large_text,
+        texts.help_local_image,
+    ] {
+        harness.get_by_role_and_label(egui::accesskit::Role::Label, help);
+    }
 }
