@@ -41,6 +41,10 @@ pub enum UiAction {
     HideToTray,
     /// Clear the presence and close the application (tray menu).
     Quit,
+    /// Open the "About" dialog (version, copyright and license).
+    ShowAbout,
+    /// Close the "About" dialog.
+    CloseAbout,
     /// Display the interface in this language and remember the choice.
     ChangeLanguage(Language),
 }

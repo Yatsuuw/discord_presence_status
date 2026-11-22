@@ -8,7 +8,7 @@ use crate::ui::state::{PresenceApp, draft_from_stored};
 ///
 /// Unsaved changes of the previously edited activity are discarded.
 pub fn select_activity(app: &mut PresenceApp, folder: &Path) {
-    app.delete_requested = false;
+    app.dialog = None;
     app.draft = app
         .activities
         .iter()

@@ -109,4 +109,13 @@ pub const FRENCH: Translations = Translations {
     error_tray: "Impossible de créer l'icône de la zone de notification : {detail}",
     error_tray_menu: "Impossible de mettre à jour le menu de la zone de notification : {detail}",
     error_interface: "Impossible de démarrer l'interface : {detail}",
+    about_button: "À propos",
+    about_help: "Version, droits d'auteur et licence",
+    about_title: "À propos de Discord Presence Status",
+    about_version: "Version {version}",
+    about_rights: "Tous droits réservés.",
+    about_license: "Ce logiciel est propriétaire : le copier, le modifier ou le redistribuer nécessite l'autorisation de l'auteur. Les suggestions et propositions de modification sont les bienvenues sur le dépôt GitHub.",
+    about_repository_link: "Voir le projet sur GitHub",
+    about_discord_notice: "Non affilié à Discord Inc. ni approuvé par celle-ci.",
+    close_button: "Fermer",
 };

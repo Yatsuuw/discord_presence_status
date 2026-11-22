@@ -5,7 +5,7 @@ use std::path::PathBuf;
 use crate::i18n::Language;
 use crate::presence::{PresenceHandle, PresenceStatus};
 use crate::storage::StoredActivity;
-use crate::ui::state::{ActivePresence, ActivityDraft, Notice};
+use crate::ui::state::{ActivePresence, ActivityDraft, Dialog, Notice};
 use crate::ui::tray::SystemTray;
 
 /// Everything the user interface knows.
@@ -31,8 +31,8 @@ pub struct PresenceApp {
     pub status: PresenceStatus,
     /// The activity the user asked Discord to display, if any.
     pub active: Option<ActivePresence>,
-    /// `true` while the delete confirmation dialog is open.
-    pub delete_requested: bool,
+    /// The modal dialog currently open, if any.
+    pub dialog: Option<Dialog>,
     /// The tray icon, or `None` when it could not be created (and in tests).
     pub tray: Option<SystemTray>,
     /// `true` while the main window is hidden to the tray.

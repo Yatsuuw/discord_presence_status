@@ -8,10 +8,10 @@ use crate::i18n::translations_for;
 use crate::presence::{PresenceStatus, shutdown_presence_worker};
 use crate::ui::UiAction;
 use crate::ui::actions::{apply_action, poll_presence_status, poll_tray_commands, sync_tray_menu};
-use crate::ui::state::PresenceApp;
+use crate::ui::state::{Dialog, PresenceApp};
 use crate::ui::views::{
-    detect_hide_to_tray, draw_activity_editor, draw_activity_list, draw_delete_dialog, draw_footer,
-    draw_header, draw_welcome,
+    detect_hide_to_tray, draw_about_dialog, draw_activity_editor, draw_activity_list,
+    draw_delete_dialog, draw_footer, draw_header, draw_welcome,
 };
 
 /// Width of the activity list when the window opens, in logical pixels.
@@ -67,9 +67,13 @@ impl eframe::App for PresenceApp {
             None => actions.extend(draw_welcome(ui, texts)),
         });
 
-        if self.delete_requested {
+        if self.dialog == Some(Dialog::DeleteConfirmation) {
             let name = self.draft.as_ref().map_or("", |draft| draft.name.as_str());
             actions.extend(draw_delete_dialog(ui.ctx(), name, texts));
+        }
+
+        if self.dialog == Some(Dialog::About) {
+            actions.extend(draw_about_dialog(ui.ctx(), texts));
         }
 
         for action in actions {

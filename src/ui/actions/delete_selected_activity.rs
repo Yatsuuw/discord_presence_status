@@ -10,7 +10,7 @@ use crate::ui::state::PresenceApp;
 /// A new, never saved activity is simply discarded. If the activity is
 /// displayed on Discord, it is removed from the profile first.
 pub fn delete_selected_activity(app: &mut PresenceApp) {
-    app.delete_requested = false;
+    app.dialog = None;
     let Some(draft) = app.draft.take() else {
         return;
     };

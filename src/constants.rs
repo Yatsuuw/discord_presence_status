@@ -8,6 +8,12 @@ use std::time::Duration;
 /// Human-readable application name (window title, data folder name).
 pub const APP_DISPLAY_NAME: &str = "Discord Presence Status";
 
+/// Copyright notice shown in the application and embedded in the executable.
+pub const COPYRIGHT_NOTICE: &str = "\u{a9} 2026 Yatsuu";
+
+/// Address of the project repository.
+pub const REPOSITORY_URL: &str = "https://github.com/Yatsuuw/discord_presence_status";
+
 /// Name of the folder, inside the data root, that holds one sub-folder per activity.
 pub const ACTIVITIES_FOLDER_NAME: &str = "user_activity";
 

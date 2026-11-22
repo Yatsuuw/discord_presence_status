@@ -8,7 +8,7 @@ use crate::ui::actions::{
     open_activities_folder, pick_image, quit_application, reload_activities, save_draft,
     select_activity, show_window, start_activity, start_selected_activity, stop_presence,
 };
-use crate::ui::state::PresenceApp;
+use crate::ui::state::{Dialog, PresenceApp};
 
 /// Applies `action` to the application state.
 pub fn apply_action(app: &mut PresenceApp, action: UiAction, context: &egui::Context) {
@@ -22,12 +22,13 @@ pub fn apply_action(app: &mut PresenceApp, action: UiAction, context: &egui::Con
         UiAction::StartActivity(folder) => start_activity(app, &folder),
         UiAction::StopPresence => stop_presence(app),
         UiAction::PickImage => pick_image(app),
-        UiAction::RequestDelete => app.delete_requested = true,
+        UiAction::RequestDelete => app.dialog = Some(Dialog::DeleteConfirmation),
         UiAction::ConfirmDelete => delete_selected_activity(app),
-        UiAction::CancelDelete => app.delete_requested = false,
+        UiAction::CancelDelete | UiAction::CloseAbout => app.dialog = None,
         UiAction::OpenActivitiesFolder => open_activities_folder(app),
         UiAction::Reload => reload_activities(app),
         UiAction::DismissNotice => app.notice = None,
+        UiAction::ShowAbout => app.dialog = Some(Dialog::About),
         UiAction::ShowWindow => show_window(app, context),
         UiAction::HideToTray => hide_to_tray(app, context),
         UiAction::Quit => quit_application(app, context),

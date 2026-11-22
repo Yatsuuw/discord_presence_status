@@ -144,3 +144,35 @@ fn explains_every_field_with_a_help_icon() {
         harness.get_by_role_and_label(egui::accesskit::Role::Label, help);
     }
 }
+
+#[test]
+fn shows_the_copyright_in_the_about_dialog() {
+    let root = tempfile::tempdir().expect("temporary folder");
+    let mut harness = harness(root.path());
+    harness.run();
+
+    harness.get_by_label("About").click();
+    harness.run();
+    harness.get_by_label("\u{a9} 2026 Yatsuu. All rights reserved.");
+    harness.get_by_label(&format!("Version {}", env!("CARGO_PKG_VERSION")));
+
+    harness.get_by_label("Close").click();
+    harness.run();
+    assert!(
+        harness
+            .query_by_label("\u{a9} 2026 Yatsuu. All rights reserved.")
+            .is_none()
+    );
+}
+
+#[test]
+fn shows_the_copyright_in_french() {
+    let root = tempfile::tempdir().expect("temporary folder");
+    std::fs::write(root.path().join("settings.toml"), "language = \"fr\"\n").expect("write");
+    let mut harness = harness(root.path());
+    harness.run();
+
+    harness.get_by_label("À propos").click();
+    harness.run();
+    harness.get_by_label("\u{a9} 2026 Yatsuu. Tous droits réservés.");
+}

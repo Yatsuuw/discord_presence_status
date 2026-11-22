@@ -50,7 +50,7 @@ pub fn build_presence_app(
         presence,
         status: PresenceStatus::Idle,
         active: None,
-        delete_requested: false,
+        dialog: None,
         tray: None,
         window_hidden: false,
         quit_requested: false,

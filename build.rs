@@ -24,7 +24,7 @@ fn main() -> std::io::Result<()> {
         .set("OriginalFilename", "discord_presence_status.exe")
         .set(
             "LegalCopyright",
-            "Copyright (c) Yatsuu. Released under the MIT License.",
+            "Copyright (c) 2026 Yatsuu. All rights reserved.",
         );
     resource.compile()
 }

@@ -109,4 +109,13 @@ pub const ENGLISH: Translations = Translations {
     error_tray: "Cannot create the notification area icon: {detail}",
     error_tray_menu: "Cannot update the notification area menu: {detail}",
     error_interface: "Cannot start the user interface: {detail}",
+    about_button: "About",
+    about_help: "Version, copyright and license",
+    about_title: "About Discord Presence Status",
+    about_version: "Version {version}",
+    about_rights: "All rights reserved.",
+    about_license: "This software is proprietary: copying, modifying or redistributing it requires the author's permission. Suggestions and proposed changes are welcome on the GitHub repository.",
+    about_repository_link: "View the project on GitHub",
+    about_discord_notice: "Not affiliated with or endorsed by Discord Inc.",
+    close_button: "Close",
 };

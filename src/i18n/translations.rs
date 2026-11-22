@@ -220,4 +220,22 @@ pub struct Translations {
     pub error_tray_menu: &'static str,
     /// Interface not started. `{detail}`.
     pub error_interface: &'static str,
+    /// Footer button opening the About dialog.
+    pub about_button: &'static str,
+    /// Tooltip of the About button.
+    pub about_help: &'static str,
+    /// Title of the About dialog.
+    pub about_title: &'static str,
+    /// Version line of the About dialog. `{version}`.
+    pub about_version: &'static str,
+    /// Rights statement after the copyright notice.
+    pub about_rights: &'static str,
+    /// License summary in the About dialog.
+    pub about_license: &'static str,
+    /// Link to the GitHub repository.
+    pub about_repository_link: &'static str,
+    /// Trademark notice.
+    pub about_discord_notice: &'static str,
+    /// Button closing a dialog.
+    pub close_button: &'static str,
 }

@@ -9,7 +9,8 @@ use crate::ui::UiAction;
 use crate::ui::state::{Notice, NoticeKind};
 use crate::ui::views::{ERROR_COLOR, SUCCESS_COLOR};
 
-/// Draws the last message and the button opening the activities folder.
+/// Draws the last message, the button opening the activities folder and the
+/// "About" button (copyright and license).
 pub fn draw_footer(
     ui: &mut egui::Ui,
     notice: Option<&Notice>,
@@ -40,6 +41,13 @@ pub fn draw_footer(
                 .clicked()
             {
                 action = Some(UiAction::OpenActivitiesFolder);
+            }
+            if ui
+                .button(texts.about_button)
+                .on_hover_text(texts.about_help)
+                .clicked()
+            {
+                action = Some(UiAction::ShowAbout);
             }
         });
     });
