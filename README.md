@@ -24,6 +24,8 @@ Discord profile — with a name, a description, an image and Discord's elapsed t
 - **Runs in the system tray** — while an activity is displayed, closing the
   window hides it to the notification area; start, stop or quit from the tray
   icon menu.
+- **English and French** — switch the language at any time; your choice is
+  remembered. Every field has a help icon explaining what to enter.
 - **Light** — a single ~5 MB native executable, no runtime to install.
 - **Installed like a real application** — for your account only (no
   administrator rights) or for every user of the computer.

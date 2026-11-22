@@ -12,7 +12,9 @@ src/
 ├── constants.rs   Every tunable value (names, limits, intervals).
 ├── activity/      The activity model and its validation rules.
 ├── error/         AppError, the single error type.
+├── i18n/          Every text of the interface, in each supported language.
 ├── paths/         Where the application and its data live.
+├── settings/      User preferences kept between launches (settings.toml).
 ├── storage/       Reading/writing activities in user_activity/.
 ├── presence/      Background worker talking to Discord over IPC.
 └── ui/            The egui interface.
@@ -26,9 +28,10 @@ scripts/           PowerShell scripts used locally and by CI.
 tests/             Integration tests, including headless UI tests.
 ```
 
-Dependencies only point "downwards": `ui` uses `presence`, `storage`,
-`paths` and `activity`; `storage` and `presence` use `activity`; nothing below
-`ui` knows about the interface toolkit.
+Dependencies only point "downwards": `ui` uses `i18n`, `settings`,
+`presence`, `storage`, `paths` and `activity`; `storage` and `presence` use
+`activity`; nothing below `ui` knows about the interface toolkit, and only
+`ui` and `i18n` deal with languages.
 
 ## Conventions
 
@@ -96,9 +99,41 @@ Each frame (`ui/presence_app_impl.rs`):
 3. applies the actions with `apply_action`, which routes each one to its file
    in `ui/actions/`.
 
-`build_presence_app` takes the activities folder as a parameter so the real
+`build_presence_app` takes the data root as a parameter so the real
 interface can be driven in tests on a temporary folder
 (`tests/user_interface.rs`).
+
+Form labels are drawn with `draw_field_label`, which adds a "(?)" icon
+(`draw_help_marker`) showing the field's help text; screen readers announce
+that text too.
+
+## Languages
+
+Every text shown to the user is a field of `i18n::Translations`. Each
+language is one complete constant of that struct (`ENGLISH`, `FRENCH`), so a
+missing translation is a compile error. Views receive `&Translations`
+(from `translations_for(app.language)`) and never contain literal text.
+
+- Placeholders such as `{name}` are replaced with `fill_placeholders`.
+- Errors keep English `Display` messages for logs; the interface translates
+  them with `describe_app_error`, `describe_validation_error` and
+  `describe_presence_error`. `PresenceStatus` therefore carries the
+  `PresenceError` itself rather than a sentence.
+- The chosen language is stored in `settings.toml` (`settings` module) next to
+  `user_activity/`, and applied by the `change_language` action.
+- `tests/translations.rs` checks that no text is empty, that every language
+  uses the same placeholders as English, and that every character exists in
+  the interface font.
+
+### Adding a language
+
+1. Add a variant to `Language` (`src/i18n/language.rs`) with its code as
+   `#[serde(rename = "...")]`, and add it to `Language::ALL`.
+2. Give its native name in `language_name`.
+3. Create `src/i18n/<language>.rs` with a complete `Translations` constant
+   (copy `english.rs`), declare it in `src/i18n/mod.rs` and return it from
+   `translations_for`.
+4. Run `cargo test`: the translation tests list any problem.
 
 ## System tray
 
@@ -141,5 +176,6 @@ built with the [`tray-icon`](https://crates.io/crates/tray-icon) crate
 2. Validate it in `validate_activity` if Discord constrains it.
 3. Send it in `build_discord_activity`.
 4. Add it to `ActivityDraft`, `draft_from_stored`, `draft_to_activity` and
-   `draw_activity_form`.
+   `draw_activity_form`, with its label, placeholder and help text in every
+   `Translations` constant.
 5. Cover it in `tests/` and document it in `docs/USER_GUIDE.md`.

@@ -36,19 +36,22 @@ can write to (a USB stick works) and run `discord_presence_status.exe`.
 
 ## Where your data is stored
 
-| Installation | Activities folder |
-|--------------|-------------------|
-| For me only, portable, or built from source | `user_activity\` next to the executable |
-| For all users (`Program Files`) | `%APPDATA%\Discord Presence Status\user_activity\` |
+| Installation | Data folder |
+|--------------|-------------|
+| For me only, portable, or built from source | The folder of the executable |
+| For all users (`Program Files`) | `%APPDATA%\Discord Presence Status\` |
+
+The data folder contains `user_activity\` (your activities) and
+`settings.toml` (your preferences, such as the interface language).
 
 Machine-wide installations cannot store data next to the executable because
 standard users cannot write into `Program Files`; each user therefore gets
-their own activities in their profile.
+their own activities and preferences in their profile.
 
 ## Uninstallation
 
 Uninstall from **Settings → Apps → Installed apps**. The uninstaller asks
-whether to delete your activities as well; answer *No* to keep them for a
+whether to delete your activities and preferences as well; answer *No* to keep them for a
 future installation. Silent uninstallations always keep them.
 
 ## Verifying a download

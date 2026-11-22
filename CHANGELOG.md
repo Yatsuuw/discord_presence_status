@@ -6,6 +6,18 @@ and the project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- The interface is available in English (default) and French. The language is
+  chosen at the top right of the window and remembered in `settings.toml`.
+- A "(?)" help icon next to every field explains what to enter, with examples.
+- Tooltips on every button.
+
+### Changed
+
+- Error messages, Discord statuses and the tray menu follow the interface language.
+- The uninstaller also offers to delete the preferences file.
+
 ## [0.2.0] - 2026-11-22
 
 ### Added

@@ -48,7 +48,8 @@ recognise your activities. Discord itself does not see it.
 ## 3. Create your activity
 
 1. Open Discord Presence Status and click **+ New activity**.
-2. Fill in the form. Hover any field to see a short explanation.
+2. Fill in the form. Every field has a **(?)** icon next to its name: hover
+   it (or the field itself) to see what to enter, with an example.
 
    | Field | Required | Shown on Discord as |
    |-------|----------|---------------------|
@@ -103,6 +104,17 @@ menu:
 | **Start activity** | Displays one of your saved activities on Discord (the displayed one is checked). Unsaved changes in the editor are not used. |
 | **Stop activity** | Removes the activity from your profile. The application keeps running in the tray. |
 | **Quit** | Removes the activity from your profile and closes the application. |
+
+## Change the language
+
+The interface is available in **English** (default) and **French**. Pick the
+language in the drop-down list at the top right of the window: the whole
+interface, including messages and the tray menu, switches immediately, and
+the choice is remembered for the next launches (in `settings.toml`, see
+[INSTALLATION.md](INSTALLATION.md#where-your-data-is-stored)).
+
+The activity type labels (*Playing*, *Joue à*...) only help you choose: Discord
+displays the verb in the language of each person viewing your profile.
 
 ## Where are my activities stored?
 
