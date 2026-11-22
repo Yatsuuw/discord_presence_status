@@ -1,0 +1,38 @@
+# Configuration of cargo-deny, run by the "Dependency audit" CI job.
+# Documentation: https://embarkstudios.github.io/cargo-deny/
+
+[graph]
+targets = ["x86_64-pc-windows-msvc"]
+
+[advisories]
+version = 2
+yanked = "deny"
+# Only fail on unmaintained crates we depend on directly.
+unmaintained = "workspace"
+
+[licenses]
+version = 2
+confidence-threshold = 0.9
+# Permissive licenses compatible with distributing this MIT application.
+allow = [
+    "0BSD",
+    "Apache-2.0",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "BSL-1.0",
+    "ISC",
+    "MIT",
+    "OFL-1.1",
+    "Ubuntu-font-1.0",
+    "Unicode-3.0",
+    "Unlicense",
+    "Zlib",
+]
+
+[bans]
+multiple-versions = "allow"
+wildcards = "deny"
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"

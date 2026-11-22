@@ -1,0 +1,54 @@
+name: Bug report
+description: Something does not work as expected.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug!
+        **Never paste personal information or tokens.** Application IDs are public and fine to share.
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Create an activity named "…"
+        2. Click "Start on Discord"
+        3. …
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Application version
+      placeholder: e.g. 0.1.0
+    validations:
+      required: true
+  - type: dropdown
+    id: install-mode
+    attributes:
+      label: Installation mode
+      options:
+        - Installer, for me only
+        - Installer, for all users
+        - Portable ZIP
+        - Built from source
+    validations:
+      required: true
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version
+      placeholder: e.g. Windows 11 26H2
+  - type: textarea
+    id: status
+    attributes:
+      label: Status or error message shown by the application
+      render: text

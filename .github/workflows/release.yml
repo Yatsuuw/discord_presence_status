@@ -1,0 +1,95 @@
+# Release: runs when a version tag such as "v1.2.3" is pushed.
+#
+# It builds the application from scratch (no cache, for a clean supply chain),
+# tests it, produces the installer, the portable archive and their SHA-256
+# checksums, attaches a signed build-provenance attestation, and publishes a
+# GitHub Release with automatically generated notes.
+#
+# Tags containing a hyphen (e.g. "v1.2.0-beta.1") are published as pre-releases.
+name: Release
+
+on:
+  push:
+    tags: ['v[0-9]+.[0-9]+.[0-9]+*']
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+
+defaults:
+  run:
+    shell: pwsh
+
+jobs:
+  release:
+    name: Build and publish
+    runs-on: windows-latest
+    environment: release
+    permissions:
+      contents: write      # create the GitHub Release
+      id-token: write      # sign the build-provenance attestation
+      attestations: write  # store the attestation
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Check that the tag matches the version in Cargo.toml
+        run: |
+          $version = ./scripts/get-version.ps1
+          $tagVersion = $env:GITHUB_REF_NAME.TrimStart('v')
+          if ($version -ne $tagVersion) {
+            throw "Tag $env:GITHUB_REF_NAME does not match Cargo.toml version $version."
+          }
+          "VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Append
+
+      - name: Install the Rust toolchain
+        run: |
+          rustup toolchain install stable --profile minimal
+          rustup default stable
+
+      - name: Run tests
+        run: cargo test --locked
+
+      - name: Build the release executable
+        run: cargo build --release --locked
+
+      - name: Install Inno Setup
+        run: ./scripts/install-inno-setup.ps1
+
+      - name: Build the installer and the portable archive
+        run: |
+          ./scripts/build-installer.ps1 -Version $env:VERSION
+          ./scripts/package-portable.ps1 -Version $env:VERSION
+
+      - name: Test both installation modes
+        run: |
+          $installer = "dist/DiscordPresenceStatus-$env:VERSION-setup-x64.exe"
+          ./scripts/test-installer.ps1 -Installer $installer -Scope CurrentUser
+          ./scripts/test-installer.ps1 -Installer $installer -Scope AllUsers
+
+      - name: Write checksums
+        run: ./scripts/write-checksums.ps1
+
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: |
+            dist/*.exe
+            dist/*.zip
+
+      - name: Publish the GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $arguments = @(
+            'release', 'create', $env:GITHUB_REF_NAME,
+            'dist/*.exe', 'dist/*.zip', 'dist/SHA256SUMS.txt',
+            '--title', "Discord Presence Status $env:VERSION",
+            '--generate-notes',
+            '--verify-tag'
+          )
+          if ($env:VERSION.Contains('-')) { $arguments += '--prerelease' }
+          gh @arguments
