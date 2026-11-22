@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/Yatsuuw/discord_presence_status/actions/workflows/ci.yml/badge.svg)](https://github.com/Yatsuuw/discord_presence_status/actions/workflows/ci.yml)
 [![Latest release](https://img.shields.io/github/v/release/Yatsuuw/discord_presence_status?include_prereleases)](https://github.com/Yatsuuw/discord_presence_status/releases)
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![License: proprietary](https://img.shields.io/badge/license-proprietary-lightgrey.svg)](LICENSE)
 
 A very lightweight Windows application to show **your own custom activity** on your
 Discord profile — with a name, a description, an image and Discord's elapsed timer.
@@ -92,4 +92,14 @@ cargo build --release
 
 ## License
 
-[MIT](LICENSE). This project is not affiliated with or endorsed by Discord Inc.
+Copyright (c) 2026 Yatsuu. All rights reserved.
+
+This software is **proprietary**: its source code is public so you can read
+it and suggest improvements, but copying, modifying or redistributing it
+requires the author's permission. You may use the official releases for your
+personal use, and you are welcome to propose changes through issues and pull
+requests. See [LICENSE](LICENSE) for the exact terms.
+
+Versions 0.1.0 and 0.2.0 were published under the MIT License.
+
+This project is not affiliated with or endorsed by Discord Inc.

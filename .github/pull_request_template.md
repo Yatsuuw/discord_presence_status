@@ -13,3 +13,4 @@
 - [ ] `cargo test` passes
 - [ ] New code follows the project structure (one function or type per file, English comments)
 - [ ] Documentation and `CHANGELOG.md` are updated when behaviour changes
+- [ ] I have read the [license](../LICENSE) and agree that this contribution is licensed to Yatsuu under its section 5

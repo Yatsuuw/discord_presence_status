@@ -2,6 +2,19 @@
 
 Thank you for your interest in improving Discord Presence Status!
 
+## Licensing of contributions
+
+Discord Presence Status is **proprietary software** (see [LICENSE](LICENSE)):
+the code is public, but all rights are reserved by Yatsuu. Proposing changes
+is explicitly allowed and welcome:
+
+- you may fork the repository **only** to prepare a pull request to this
+  repository;
+- by submitting a contribution, you confirm you have the right to do so and
+  you grant Yatsuu a perpetual, irrevocable, royalty-free license to use,
+  modify, distribute and relicense it (section 5 of the license);
+- the maintainer decides alone whether a contribution is accepted.
+
 ## Before you start
 
 - For anything bigger than a small fix, open an issue first so we can agree on

@@ -1,21 +1,118 @@
-MIT License
+Discord Presence Status - Proprietary License
 
-Copyright (c) 2026 Yatsuu
+Copyright (c) 2026 Yatsuu. All rights reserved.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+The source code of this software is publicly visible, but it is NOT open
+source. Unless stated otherwise below, no right is granted.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+
+1. DEFINITIONS
+
+"Software" means Discord Presence Status, including its source code, compiled
+executables, installers, icons, images and documentation, in any version.
+
+"Author" means Yatsuu, the sole owner of the Software.
+
+"Official Release" means a build of the Software published by the Author on
+the Releases page of the official repository:
+https://github.com/Yatsuuw/discord_presence_status
+
+
+2. OWNERSHIP
+
+The Software is protected by copyright and other intellectual property laws.
+It is licensed, not sold. The Author keeps all rights, title and interest in
+the Software.
+
+
+3. WHAT YOU MAY DO
+
+Subject to the terms of this license, you may:
+
+  a) download, install and use Official Releases on your own devices, for
+     your personal use;
+  b) view and study the source code, for example to understand how the
+     Software works or to check its security;
+  c) propose changes as described in section 5.
+
+
+4. WHAT YOU MAY NOT DO
+
+Without the prior written permission of the Author, you may not:
+
+  a) copy, reproduce or redistribute the Software, in whole or in part, in
+     source or compiled form, except as needed for the uses allowed in
+     section 3;
+  b) modify the Software, translate it, or create derivative works based on
+     it, except as described in section 5;
+  c) sell, rent, lend, sublicense or otherwise make the Software available to
+     third parties, or use it to provide a commercial product or service;
+  d) publish modified builds or present a modified version as the Software;
+  e) remove or alter any copyright notice, trademark or license text.
+
+
+5. PROPOSING CHANGES
+
+Suggestions and proposed changes are welcome.
+
+  a) You may report problems and suggest ideas through the issue tracker of
+     the official repository.
+  b) You may fork the official repository on GitHub and modify your fork for
+     the sole purpose of submitting a pull request to the official
+     repository. Your fork must not be used, distributed or published for
+     any other purpose.
+  c) By submitting a contribution (code, documentation, translation, image or
+     any other material), you confirm that you have the right to do so, and
+     you grant the Author a perpetual, worldwide, irrevocable, royalty-free
+     license to use, modify, distribute, sublicense and relicense your
+     contribution as part of the Software or otherwise.
+  d) The Author decides alone whether to accept a contribution, and may
+     modify or reject it without giving reasons.
+
+
+6. THIRD-PARTY COMPONENTS
+
+The Software includes third-party libraries and fonts, which remain under
+their own licenses (such as MIT, Apache-2.0, BSD, Zlib or the SIL Open Font
+License). This license does not apply to them and does not restrict the
+rights their licenses grant you.
+
+
+7. EARLIER VERSIONS
+
+Versions 0.1.0 and 0.2.0 were published under the MIT License. Copies of
+those versions obtained under that license remain governed by it. This
+license applies to version 0.3.0 and every later version.
+
+
+8. TRADEMARKS
+
+"Discord" is a trademark of Discord Inc. The Software is not affiliated with,
+endorsed or sponsored by Discord Inc.
+
+
+9. NO WARRANTY
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+
+
+10. LIMITATION OF LIABILITY
+
+IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+SOFTWARE, TO THE EXTENT PERMITTED BY APPLICABLE LAW.
+
+
+11. TERMINATION
+
+This license ends automatically if you break any of its terms. You must then
+stop using the Software and delete every copy in your possession.
+
+
+12. CONTACT
+
+To ask for a permission not granted by this license, open an issue on the
+official repository or contact the Author through GitHub (@Yatsuuw).

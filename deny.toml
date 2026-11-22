@@ -29,6 +29,11 @@ allow = [
     "Zlib",
 ]
 
+# This application is proprietary and never published to crates.io: only its
+# dependencies need an approved open-source license.
+[licenses.private]
+ignore = true
+
 [bans]
 multiple-versions = "allow"
 wildcards = "deny"

@@ -12,11 +12,17 @@ and the project uses [Semantic Versioning](https://semver.org/).
   chosen at the top right of the window and remembered in `settings.toml`.
 - A "(?)" help icon next to every field explains what to enter, with examples.
 - Tooltips on every button.
+- An "About" dialog, opened from the footer, shows the version, the copyright
+  notice and a summary of the license.
 
 ### Changed
 
 - Error messages, Discord statuses and the tray menu follow the interface language.
 - The uninstaller also offers to delete the preferences file.
+- **License**: starting with this version, the software is proprietary
+  (all rights reserved by Yatsuu). The source code stays public and proposed
+  changes are welcome; see `LICENSE`. Versions 0.1.0 and 0.2.0 remain
+  available under the MIT License.
 
 ## [0.2.0] - 2026-11-22
 
