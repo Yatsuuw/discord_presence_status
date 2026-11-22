@@ -4,8 +4,9 @@ use eframe::egui;
 
 use crate::ui::UiAction;
 use crate::ui::actions::{
-    create_new_activity, delete_selected_activity, open_activities_folder, pick_image,
-    reload_activities, save_draft, select_activity, start_selected_activity, stop_presence,
+    create_new_activity, delete_selected_activity, hide_to_tray, open_activities_folder,
+    pick_image, quit_application, reload_activities, save_draft, select_activity, show_window,
+    start_activity, start_selected_activity, stop_presence,
 };
 use crate::ui::state::PresenceApp;
 
@@ -18,6 +19,7 @@ pub fn apply_action(app: &mut PresenceApp, action: UiAction, context: &egui::Con
             let _ = save_draft(app, context);
         }
         UiAction::StartPresence => start_selected_activity(app, context),
+        UiAction::StartActivity(folder) => start_activity(app, &folder),
         UiAction::StopPresence => stop_presence(app),
         UiAction::PickImage => pick_image(app),
         UiAction::RequestDelete => app.delete_requested = true,
@@ -26,5 +28,8 @@ pub fn apply_action(app: &mut PresenceApp, action: UiAction, context: &egui::Con
         UiAction::OpenActivitiesFolder => open_activities_folder(app),
         UiAction::Reload => reload_activities(app),
         UiAction::DismissNotice => app.notice = None,
+        UiAction::ShowWindow => show_window(app, context),
+        UiAction::HideToTray => hide_to_tray(app, context),
+        UiAction::Quit => quit_application(app, context),
     }
 }

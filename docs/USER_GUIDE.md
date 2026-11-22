@@ -10,8 +10,10 @@ some images) that Discord Presence Status uses to talk to your Discord app.
 
 - The **Application ID** tells Discord which application the activity belongs to.
 - Discord shows the activity **only while Discord Presence Status is running**
-  and the **Discord desktop app** is open on the same computer. Closing Discord
-  Presence Status removes the activity from your profile.
+  and the **Discord desktop app** is open on the same computer. Quitting Discord
+  Presence Status removes the activity from your profile; while an activity is
+  displayed, closing the window only hides it to the system tray (see
+  [Keep it running in the system tray](#keep-it-running-in-the-system-tray)).
 - Discord cannot read files from your computer: images must be uploaded to the
   Developer Portal or available at a public `https://` address.
 
@@ -82,6 +84,26 @@ While an activity is displayed you can edit it and click **Save**: Discord is
 updated immediately and the timer keeps running. Click **Stop** to remove it,
 or start another activity to switch.
 
+## Keep it running in the system tray
+
+Discord Presence Status shows its icon in the Windows notification area (the
+system tray, next to the clock; it may be hidden behind the **^** arrow).
+
+- **While an activity is displayed**, closing or minimising the window hides
+  it to the tray instead of quitting, so your activity stays on your profile.
+- **When no activity is displayed**, closing the window quits the application
+  and minimising works as usual.
+
+Left-click the tray icon to bring the window back. Right-click it for the
+menu:
+
+| Entry | Effect |
+|-------|--------|
+| **Show window** | Brings the main window back. |
+| **Start activity** | Displays one of your saved activities on Discord (the displayed one is checked). Unsaved changes in the editor are not used. |
+| **Stop activity** | Removes the activity from your profile. The application keeps running in the tray. |
+| **Quit** | Removes the activity from your profile and closes the application. |
+
 ## Where are my activities stored?
 
 Click **Open activities folder** at the bottom of the window. Each activity is
@@ -106,6 +128,10 @@ application is open). The exact location depends on the installation mode, see
   activity sharing is enabled in Discord's settings.
 - **"Discord refused" with "Invalid Client ID"** — the Application ID is wrong;
   copy it again from the Developer Portal.
+- **I cannot find the window anymore** — it is hidden in the system tray:
+  click the Discord Presence Status icon next to the clock (behind the **^**
+  arrow if Windows hides it). Use **Quit** in its menu to close the
+  application.
 - **The image does not show** — check the asset key spelling (it is case
   sensitive), wait a few minutes after uploading, or check that the URL opens
   in a browser.

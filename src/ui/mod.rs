@@ -7,10 +7,12 @@
 //! 2. [`actions`] apply those actions: they are the only code allowed to
 //!    touch the disk or talk to the presence worker.
 //!
-//! Keeping drawing and side effects apart makes both easy to follow.
+//! Keeping drawing and side effects apart makes both easy to follow. The
+//! [`tray`] icon follows the same flow: its clicks become `UiAction`s.
 
 pub mod actions;
 pub mod state;
+pub mod tray;
 pub mod views;
 
 mod build_native_options;

@@ -5,6 +5,7 @@ use std::path::PathBuf;
 use crate::presence::{PresenceHandle, PresenceStatus};
 use crate::storage::StoredActivity;
 use crate::ui::state::{ActivePresence, ActivityDraft, Notice};
+use crate::ui::tray::SystemTray;
 
 /// Everything the user interface knows.
 #[derive(Debug)]
@@ -27,4 +28,11 @@ pub struct PresenceApp {
     pub active: Option<ActivePresence>,
     /// `true` while the delete confirmation dialog is open.
     pub delete_requested: bool,
+    /// The tray icon, or `None` when it could not be created (and in tests).
+    pub tray: Option<SystemTray>,
+    /// `true` while the main window is hidden to the tray.
+    pub window_hidden: bool,
+    /// `true` once the user chose "Quit" in the tray: the next close request
+    /// really closes the application.
+    pub quit_requested: bool,
 }

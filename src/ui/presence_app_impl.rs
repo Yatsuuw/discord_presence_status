@@ -6,11 +6,11 @@ use eframe::egui::{self, CentralPanel, Panel};
 
 use crate::presence::{PresenceStatus, shutdown_presence_worker};
 use crate::ui::UiAction;
-use crate::ui::actions::{apply_action, poll_presence_status};
+use crate::ui::actions::{apply_action, poll_presence_status, poll_tray_commands, sync_tray_menu};
 use crate::ui::state::PresenceApp;
 use crate::ui::views::{
-    draw_activity_editor, draw_activity_list, draw_delete_dialog, draw_footer, draw_header,
-    draw_welcome,
+    detect_hide_to_tray, draw_activity_editor, draw_activity_list, draw_delete_dialog, draw_footer,
+    draw_header, draw_welcome,
 };
 
 /// Width of the activity list when the window opens, in logical pixels.
@@ -23,7 +23,8 @@ impl eframe::App for PresenceApp {
     fn ui(&mut self, ui: &mut egui::Ui, _frame: &mut eframe::Frame) {
         poll_presence_status(self);
 
-        let mut actions: Vec<UiAction> = Vec::new();
+        let mut actions: Vec<UiAction> = poll_tray_commands(self);
+        actions.extend(detect_hide_to_tray(ui.ctx(), self));
         let active_folder = self.active.as_ref().map(|active| active.folder.clone());
 
         Panel::top("header").show(ui, |ui| draw_header(ui, &self.status));
@@ -69,12 +70,18 @@ impl eframe::App for PresenceApp {
             apply_action(self, action, ui.ctx());
         }
 
-        if matches!(self.status, PresenceStatus::Active { .. }) {
+        sync_tray_menu(self);
+
+        // The timer is only visible in the window: no need to refresh it
+        // while the window is hidden to the tray.
+        if matches!(self.status, PresenceStatus::Active { .. }) && !self.window_hidden {
             ui.ctx().request_repaint_after(TIMER_REFRESH);
         }
     }
 
     fn on_exit(&mut self, _gl: Option<&eframe::glow::Context>) {
         shutdown_presence_worker(&mut self.presence);
+        // Remove the icon from the notification area right away.
+        self.tray = None;
     }
 }

@@ -14,6 +14,9 @@ pub enum UiAction {
     Save,
     /// Save the activity being edited and display it on Discord.
     StartPresence,
+    /// Display the saved activity stored in this folder on Discord, without
+    /// opening it in the editor (tray menu).
+    StartActivity(PathBuf),
     /// Remove the activity from the Discord profile.
     StopPresence,
     /// Choose a local image for the activity being edited.
@@ -30,4 +33,10 @@ pub enum UiAction {
     Reload,
     /// Hide the message shown in the footer.
     DismissNotice,
+    /// Show the main window again (tray icon).
+    ShowWindow,
+    /// Hide the main window, keeping the presence running behind the tray icon.
+    HideToTray,
+    /// Clear the presence and close the application (tray menu).
+    Quit,
 }

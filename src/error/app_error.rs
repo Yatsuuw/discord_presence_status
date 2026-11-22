@@ -71,6 +71,10 @@ pub enum AppError {
     #[error("cannot start the presence worker: {0}")]
     WorkerSpawn(#[source] std::io::Error),
 
+    /// The tray icon could not be added to the notification area.
+    #[error("cannot create the tray icon: {0}")]
+    Tray(String),
+
     /// The user interface could not be started.
     #[error("cannot start the user interface: {0}")]
     Interface(String),

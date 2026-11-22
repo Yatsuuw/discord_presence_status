@@ -18,7 +18,8 @@ src/
 └── ui/            The egui interface.
     ├── state/     Data kept between frames (PresenceApp, ActivityDraft…).
     ├── views/     Drawing; returns UiActions, never has side effects.
-    └── actions/   Applies UiActions: the only UI code touching disk or Discord.
+    ├── actions/   Applies UiActions: the only UI code touching disk or Discord.
+    └── tray/      System tray icon and menu (keeps the presence running hidden).
 build.rs           Embeds the icon and version information into the .exe.
 installer/         Inno Setup script (per-user and machine-wide installation).
 scripts/           PowerShell scripts used locally and by CI.
@@ -98,6 +99,40 @@ Each frame (`ui/presence_app_impl.rs`):
 `build_presence_app` takes the activities folder as a parameter so the real
 interface can be driven in tests on a temporary folder
 (`tests/user_interface.rs`).
+
+## System tray
+
+Because Discord drops the presence when the process exits, the application
+can keep running with its window hidden behind a notification area icon,
+built with the [`tray-icon`](https://crates.io/crates/tray-icon) crate
+(default features disabled: on Windows it only needs the Win32 API).
+
+```text
+ tray icon ── TrayCommand (channel + request_repaint) ──▶ poll_tray_commands ──▶ UiAction
+ PresenceApp ── build_tray_menu_model ──▶ TrayMenuModel ── (changed?) ──▶ build_tray_menu
+```
+
+- `create_presence_app` adds the icon (`create_system_tray`) once the event
+  loop runs. `build_presence_app` does not, so tests never touch the
+  notification area; `PresenceApp::tray` is `None` there, and also when
+  Windows refuses the icon, in which case the application behaves as before.
+- Menu clicks and left clicks on the icon arrive on the event loop thread.
+  The handlers only send a `TrayCommand` on a channel and call
+  `request_repaint`; eframe keeps running frames for hidden windows when a
+  repaint is requested, so commands are applied even while the window is
+  hidden. `poll_tray_commands` turns them into ordinary `UiAction`s
+  (`ShowWindow`, `StartActivity`, `StopPresence`, `Quit`).
+- Every frame, `sync_tray_menu` describes the menu as a plain
+  `TrayMenuModel` (activities, displayed one, tooltip) and rebuilds the
+  native menu only when the description changed.
+- `detect_hide_to_tray` turns a close or minimise request into
+  `UiAction::HideToTray` when `keeps_running_in_tray` holds: a tray icon
+  exists, an activity is displayed and the user did not choose **Quit**.
+  `hide_to_tray` cancels the close and hides the window; `show_window`
+  shows, restores and focuses it.
+- **Quit** sets `quit_requested` and closes the window, so the regular
+  `on_exit` path runs `shutdown_presence_worker` (clearing the presence)
+  and drops the tray icon.
 
 ## Adding a field to activities
 

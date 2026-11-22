@@ -6,6 +6,13 @@ and the project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- System tray icon with a menu to show the window, start a saved activity,
+  stop the displayed activity and quit.
+- While an activity is displayed, closing or minimising the window hides it
+  to the system tray so the Discord presence keeps running.
+
 ## [0.1.0] - 2026-11-22
 
 ### Added

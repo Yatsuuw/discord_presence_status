@@ -21,6 +21,9 @@ Discord profile — with a name, a description, an image and Discord's elapsed t
   sent anywhere except to the Discord app running on your computer.
 - **Resilient** — start Discord after the application, or restart it: the
   activity comes back automatically.
+- **Runs in the system tray** — while an activity is displayed, closing the
+  window hides it to the notification area; start, stop or quit from the tray
+  icon menu.
 - **Light** — a single ~5 MB native executable, no runtime to install.
 - **Installed like a real application** — for your account only (no
   administrator rights) or for every user of the computer.

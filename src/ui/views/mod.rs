@@ -4,6 +4,7 @@
 //! everything else as [`UiAction`](crate::ui::UiAction)s.
 
 mod describe_status;
+mod detect_hide_to_tray;
 mod draw_activity_editor;
 mod draw_activity_form;
 mod draw_activity_list;
@@ -20,6 +21,7 @@ mod palette;
 mod status_display;
 
 pub use describe_status::describe_status;
+pub use detect_hide_to_tray::detect_hide_to_tray;
 pub use draw_activity_editor::draw_activity_editor;
 pub use draw_activity_form::draw_activity_form;
 pub use draw_activity_list::draw_activity_list;

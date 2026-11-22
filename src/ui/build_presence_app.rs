@@ -14,7 +14,9 @@ use crate::ui::state::PresenceApp;
 /// presence worker and loads the activities of `activities_directory`.
 ///
 /// Taking the folder as a parameter lets tests run the real interface on a
-/// temporary folder.
+/// temporary folder. The tray icon is not created here (see
+/// [`create_presence_app`](crate::ui::create_presence_app)), so tests never
+/// touch the notification area.
 ///
 /// # Errors
 ///
@@ -38,6 +40,9 @@ pub fn build_presence_app(
         status: PresenceStatus::Idle,
         active: None,
         delete_requested: false,
+        tray: None,
+        window_hidden: false,
+        quit_requested: false,
     };
     reload_activities(&mut app);
     Ok(app)
