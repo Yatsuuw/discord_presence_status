@@ -6,6 +6,8 @@ and the project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-22
+
 ### Added
 
 - System tray icon with a menu to show the window, start a saved activity,
@@ -25,5 +27,6 @@ and the project uses [Semantic Versioning](https://semver.org/).
 - Windows installer supporting per-user and machine-wide installation, and a portable archive.
 - Continuous integration and automated, attested GitHub releases.
 
-[Unreleased]: https://github.com/Yatsuuw/discord_presence_status/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/Yatsuuw/discord_presence_status/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/Yatsuuw/discord_presence_status/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/Yatsuuw/discord_presence_status/releases/tag/v0.1.0
