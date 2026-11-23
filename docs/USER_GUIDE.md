@@ -62,7 +62,9 @@ recognise your activities. Discord itself does not see it.
    | Image tooltip | No | Text shown when hovering the picture |
    | Local image | No | Not shown on Discord |
 
-   Discord requires texts between 2 and 128 characters.
+   Discord requires texts between 2 and 128 characters. Accented capitals
+   can be typed with Windows Alt codes, for example **Alt+144** for *É*
+   (hold Alt and type the digits on the numeric keypad).
 3. Click **Save**. The activity appears in the list on the left.
 
 ## 4. Show it on Discord

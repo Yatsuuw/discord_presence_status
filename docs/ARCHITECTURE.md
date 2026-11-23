@@ -41,8 +41,9 @@ Dependencies only point "downwards": `ui` uses `i18n`, `settings`,
   and re-exports, and its `//!` comment describes the module.
 - **Every item is documented** in English. `missing_docs` is a warning and
   Clippy runs in pedantic mode; CI treats warnings as errors.
-- **No `unsafe`** (`unsafe_code = "deny"`, with one documented exception:
-  `wait_for_tray_message`), no `unwrap()`/`expect()` in
+- **No `unsafe`** (`unsafe_code = "deny"`, with two small documented
+  exceptions: `wait_for_tray_message` and `install_alt_code_hook`), no
+  `unwrap()`/`expect()` in
   `src/`: failures become an `AppError` shown to the user.
 - **Explicit paths.** Storage functions receive the folders they work on,
   which makes them independent of the installation mode and easy to test with
@@ -193,8 +194,8 @@ the presence worker and the tray icon can wake the window up
   does.
 - Without a window there is no event loop: `wait_for_tray_message` receives
   the Windows messages of the icon's hidden window (`GetMessageW` /
-  `DispatchMessageW`). It is the only `unsafe` code of the project, allowed
-  in that single function and documented with `SAFETY` comments.
+  `DispatchMessageW`). It is one of the two `unsafe` functions of the
+  project, documented with `SAFETY` comments.
 - `sync_tray_menu` describes the menu as a plain `TrayMenuModel`
   (activities, displayed one, tooltip, language) and rebuilds the native
   menu only when the description changed.
@@ -203,6 +204,31 @@ the presence worker and the tray icon can wake the window up
   exists, an activity is displayed and the user did not choose **Quit**.
 - **Quit** sets `WindowExit::Quit` and closes the window; `run_app` then
   runs `shutdown_presence_worker` (clearing the presence) and drops the icon.
+
+## Keyboard: Alt codes
+
+winit, which receives the keyboard for the window, mishandles Windows Alt
+codes (for example Alt+144 = É): it inserts the keypad digits typed while
+Alt is held ("144") and drops the composed character, which Windows sends in
+a `WM_CHAR` message only when Alt is released. The `ui::keyboard` module
+fixes both without patching winit:
+
+```text
+ Windows message ── install_alt_code_hook ──▶ observe_keyboard_message ──▶ AltCodeInput
+ egui RawInput   ◀── WindowSession::raw_input_hook ◀── apply_alt_code_input ◀──┘
+```
+
+- `build_native_options` installs a winit message hook
+  (`EventLoopBuilderExtWindows::with_msg_hook`) that only observes messages:
+  a keypad digit pressed with Alt (`WM_SYSKEYDOWN`) counts one digit to
+  remove; a character sent on a key release (`WM_CHAR` with the release bit)
+  is the composed character. Normal typing, dead keys and AltGr produce their
+  characters on key presses and are left alone. Reading the `MSG` pointer is
+  the second `unsafe` function of the project.
+- Before every frame, `apply_alt_code_input` removes the counted digits from
+  egui's input and inserts the composed characters, unless egui already got
+  them (should a future winit version fix the problem).
+- `tests/alt_codes.rs` covers the recognition and the correction.
 
 ## Adding a field to activities
 

@@ -60,6 +60,7 @@ pub fn build_presence_app(
         tray: None,
         window_exit: None,
         repaint_target,
+        alt_code_input: Arc::default(),
     };
     reload_activities(&mut app);
     if let Err(error) = settings {

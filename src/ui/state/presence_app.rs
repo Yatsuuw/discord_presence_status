@@ -5,6 +5,7 @@ use std::path::PathBuf;
 use crate::i18n::Language;
 use crate::presence::{PresenceHandle, PresenceStatus};
 use crate::storage::StoredActivity;
+use crate::ui::keyboard::SharedAltCodeInput;
 use crate::ui::state::{ActivePresence, ActivityDraft, Dialog, Notice, RepaintTarget, WindowExit};
 use crate::ui::tray::SystemTray;
 
@@ -39,4 +40,6 @@ pub struct PresenceApp {
     pub window_exit: Option<WindowExit>,
     /// The window to wake up when the worker or the tray icon has news.
     pub repaint_target: RepaintTarget,
+    /// Alt code corrections waiting for the next frame.
+    pub alt_code_input: SharedAltCodeInput,
 }

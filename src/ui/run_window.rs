@@ -21,7 +21,7 @@ pub fn run_window(app: &mut PresenceApp) -> Result<(), AppError> {
 
     let result = eframe::run_native(
         APP_DISPLAY_NAME,
-        build_native_options(),
+        build_native_options(&app.alt_code_input, &app.repaint_target),
         Box::new(|creation_context| {
             egui_extras::install_image_loaders(&creation_context.egui_ctx);
             if let Ok(mut target) = repaint_target.lock() {

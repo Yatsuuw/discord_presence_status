@@ -11,6 +11,7 @@
 //! [`tray`] icon follows the same flow: its clicks become `UiAction`s.
 
 pub mod actions;
+pub mod keyboard;
 pub mod state;
 pub mod tray;
 pub mod views;

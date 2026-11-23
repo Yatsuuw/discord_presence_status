@@ -2,6 +2,7 @@
 
 use eframe::egui;
 
+use crate::ui::keyboard::apply_alt_code_input;
 use crate::ui::state::PresenceApp;
 
 /// The main window, borrowing the application state for as long as it is
@@ -18,5 +19,11 @@ pub struct WindowSession<'app> {
 impl eframe::App for WindowSession<'_> {
     fn ui(&mut self, ui: &mut egui::Ui, frame: &mut eframe::Frame) {
         eframe::App::ui(self.app, ui, frame);
+    }
+
+    fn raw_input_hook(&mut self, _context: &egui::Context, raw_input: &mut egui::RawInput) {
+        if let Ok(mut input) = self.app.alt_code_input.lock() {
+            apply_alt_code_input(&mut input, raw_input);
+        }
     }
 }

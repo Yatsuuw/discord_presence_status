@@ -6,6 +6,16 @@ and the project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Windows Alt codes work in text fields (for example Alt+144 or Alt+0201 to
+  type É): the keypad digits are no longer inserted and the composed
+  character is typed. AltGr characters such as @ are unaffected.
+
+### Changed
+
+- The license gives an e-mail address to contact the author.
+
 ## [0.4.0] - 2026-11-23
 
 ### Changed
