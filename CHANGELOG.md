@@ -6,6 +6,8 @@ and the project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-11-23
+
 ### Fixed
 
 - Windows Alt codes work in text fields (for example Alt+144 or Alt+0201 to
@@ -66,7 +68,8 @@ and the project uses [Semantic Versioning](https://semver.org/).
 - Windows installer supporting per-user and machine-wide installation, and a portable archive.
 - Continuous integration and automated, attested GitHub releases.
 
-[Unreleased]: https://github.com/Yatsuuw/discord_presence_status/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/Yatsuuw/discord_presence_status/compare/v0.4.1...HEAD
+[0.4.1]: https://github.com/Yatsuuw/discord_presence_status/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/Yatsuuw/discord_presence_status/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/Yatsuuw/discord_presence_status/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/Yatsuuw/discord_presence_status/compare/v0.1.0...v0.2.0
