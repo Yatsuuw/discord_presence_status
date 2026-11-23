@@ -1,6 +1,6 @@
 //! Decision between hiding to the tray and quitting.
 
-use crate::ui::state::PresenceApp;
+use crate::ui::state::{PresenceApp, WindowExit};
 
 /// Returns `true` when closing or minimising the window should hide it to
 /// the tray instead.
@@ -10,5 +10,5 @@ use crate::ui::state::PresenceApp;
 /// bring the window back and the user did not choose "Quit" in the tray.
 #[must_use]
 pub fn keeps_running_in_tray(app: &PresenceApp) -> bool {
-    app.tray.is_some() && app.active.is_some() && !app.quit_requested
+    app.tray.is_some() && app.active.is_some() && app.window_exit != Some(WindowExit::Quit)
 }

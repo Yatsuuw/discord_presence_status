@@ -1,16 +1,16 @@
-//! Hiding of the main window to the tray.
+//! Hiding of the application behind its tray icon.
 
 use eframe::egui::{self, ViewportCommand};
 
-use crate::ui::state::PresenceApp;
+use crate::ui::state::{PresenceApp, WindowExit};
 
-/// Hides the main window, keeping the application (and the Discord
-/// presence) running behind the tray icon.
+/// Closes the main window while keeping the presence running behind the
+/// tray icon.
 ///
-/// Also cancels a pending close request, so closing the window hides it
-/// instead of quitting.
+/// The window is really destroyed, not just hidden: its graphics context is
+/// what uses most of the memory. [`run_app`](crate::ui::run_app) recreates
+/// it when the user clicks the tray icon.
 pub fn hide_to_tray(app: &mut PresenceApp, context: &egui::Context) {
-    context.send_viewport_cmd(ViewportCommand::CancelClose);
-    context.send_viewport_cmd(ViewportCommand::Visible(false));
-    app.window_hidden = true;
+    app.window_exit = Some(WindowExit::HideToTray);
+    context.send_viewport_cmd(ViewportCommand::Close);
 }

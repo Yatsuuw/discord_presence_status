@@ -5,7 +5,7 @@ use std::path::PathBuf;
 use crate::i18n::Language;
 use crate::presence::{PresenceHandle, PresenceStatus};
 use crate::storage::StoredActivity;
-use crate::ui::state::{ActivePresence, ActivityDraft, Dialog, Notice};
+use crate::ui::state::{ActivePresence, ActivityDraft, Dialog, Notice, RepaintTarget, WindowExit};
 use crate::ui::tray::SystemTray;
 
 /// Everything the user interface knows.
@@ -35,9 +35,8 @@ pub struct PresenceApp {
     pub dialog: Option<Dialog>,
     /// The tray icon, or `None` when it could not be created (and in tests).
     pub tray: Option<SystemTray>,
-    /// `true` while the main window is hidden to the tray.
-    pub window_hidden: bool,
-    /// `true` once the user chose "Quit" in the tray: the next close request
-    /// really closes the application.
-    pub quit_requested: bool,
+    /// Why the main window is closing, once the user asked for it.
+    pub window_exit: Option<WindowExit>,
+    /// The window to wake up when the worker or the tray icon has news.
+    pub repaint_target: RepaintTarget,
 }

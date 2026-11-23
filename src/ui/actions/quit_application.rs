@@ -1,15 +1,13 @@
-//! Closing of the application from the tray.
+//! Closing of the whole application.
 
 use eframe::egui::{self, ViewportCommand};
 
-use crate::ui::state::PresenceApp;
+use crate::ui::state::{PresenceApp, WindowExit};
 
-/// Closes the application, even when it would otherwise hide to the tray.
-///
-/// The window close then runs `on_exit`, which clears the Discord presence
-/// with [`shutdown_presence_worker`](crate::presence::shutdown_presence_worker).
+/// Closes the window and stops the application; the presence is cleared
+/// when [`run_app`](crate::ui::run_app) shuts the worker down.
 pub fn quit_application(app: &mut PresenceApp, context: &egui::Context) {
-    app.quit_requested = true;
+    app.window_exit = Some(WindowExit::Quit);
     context.send_viewport_cmd(ViewportCommand::Close);
     context.request_repaint();
 }

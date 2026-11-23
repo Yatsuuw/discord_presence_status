@@ -14,6 +14,15 @@ pub const COPYRIGHT_NOTICE: &str = "\u{a9} 2026 Yatsuu";
 /// Address of the project repository.
 pub const REPOSITORY_URL: &str = "https://github.com/Yatsuuw/discord_presence_status";
 
+/// Command-line flag starting the application behind the tray icon.
+pub const CLI_BACKGROUND_FLAG: &str = "--background";
+
+/// Command-line option giving the folder of the activity to resume.
+pub const CLI_ACTIVITY_OPTION: &str = "--activity";
+
+/// Command-line option giving the start of the Discord timer, in Unix milliseconds.
+pub const CLI_STARTED_AT_OPTION: &str = "--started-at";
+
 /// Name of the folder, inside the data root, that holds one sub-folder per activity.
 pub const ACTIVITIES_FOLDER_NAME: &str = "user_activity";
 

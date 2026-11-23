@@ -3,6 +3,7 @@
 use std::path::Path;
 
 use crate::i18n::translations_for;
+use crate::presence::current_unix_millis;
 use crate::ui::actions::{display_activity, reload_activities, show_error};
 use crate::ui::state::PresenceApp;
 
@@ -17,7 +18,7 @@ pub fn start_activity(app: &mut PresenceApp, folder: &Path) {
         .find(|stored| stored.folder == folder)
         .cloned();
     if let Some(stored) = stored {
-        display_activity(app, stored);
+        display_activity(app, stored, current_unix_millis());
     } else {
         reload_activities(app);
         show_error(app, translations_for(app.language).notice_activity_missing);

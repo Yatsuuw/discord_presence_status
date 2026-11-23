@@ -1,7 +1,7 @@
 //! Display of a saved activity on Discord.
 
 use crate::i18n::{fill_placeholders, translations_for};
-use crate::presence::{PresenceCommand, PresenceRequest, current_unix_millis};
+use crate::presence::{PresenceCommand, PresenceRequest};
 use crate::storage::StoredActivity;
 use crate::ui::actions::{show_error, show_success};
 use crate::ui::state::{ActivePresence, PresenceApp};
@@ -10,9 +10,8 @@ use crate::ui::state::{ActivePresence, PresenceApp};
 ///
 /// Discord's elapsed timer starts now. Any previously displayed activity is
 /// replaced.
-pub fn display_activity(app: &mut PresenceApp, stored: StoredActivity) {
+pub fn display_activity(app: &mut PresenceApp, stored: StoredActivity, started_at_millis: i64) {
     let texts = translations_for(app.language);
-    let started_at_millis = current_unix_millis();
     let request = PresenceRequest {
         activity: stored.activity.clone(),
         started_at_millis,

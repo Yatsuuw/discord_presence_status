@@ -45,7 +45,8 @@ described in more detail in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md):
 - Code, comments and documentation are written in **English**.
 - Views never touch the disk or Discord: they return a `UiAction`, applied in
   `src/ui/actions/`.
-- No `unsafe` code, no `unwrap()`/`expect()` outside tests.
+- No `unsafe` code (the only exception is the documented tray message loop,
+  `wait_for_tray_message`), no `unwrap()`/`expect()` outside tests.
 
 ## Checks
 

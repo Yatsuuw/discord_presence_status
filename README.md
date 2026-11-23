@@ -26,7 +26,8 @@ Discord profile — with a name, a description, an image and Discord's elapsed t
   icon menu.
 - **English and French** — switch the language at any time; your choice is
   remembered. Every field has a help icon explaining what to enter.
-- **Light** — a single ~5 MB native executable, no runtime to install.
+- **Light** — a single ~5 MB native executable, no runtime to install; about
+  2 MB of memory while it runs behind the tray icon.
 - **Installed like a real application** — for your account only (no
   administrator rights) or for every user of the computer.
 

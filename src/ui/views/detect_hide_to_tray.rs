@@ -18,6 +18,6 @@ pub fn detect_hide_to_tray(context: &egui::Context, app: &PresenceApp) -> Option
         let viewport = input.viewport();
         (viewport.close_requested(), viewport.minimized == Some(true))
     });
-    let hides = close_requested || (minimized && !app.window_hidden);
+    let hides = (close_requested || minimized) && app.window_exit.is_none();
     hides.then_some(UiAction::HideToTray)
 }

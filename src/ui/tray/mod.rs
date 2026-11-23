@@ -22,6 +22,7 @@ mod tray_command;
 mod tray_menu_entry;
 mod tray_menu_model;
 mod tray_tooltip;
+mod wait_for_tray_message;
 
 pub use build_tray_menu::build_tray_menu;
 pub use build_tray_menu_model::build_tray_menu_model;
@@ -33,3 +34,4 @@ pub use tray_command::TrayCommand;
 pub use tray_menu_entry::TrayMenuEntry;
 pub use tray_menu_model::TrayMenuModel;
 pub use tray_tooltip::tray_tooltip;
+pub use wait_for_tray_message::wait_for_tray_message;

@@ -13,6 +13,7 @@ src/
 ├── activity/      The activity model and its validation rules.
 ├── error/         AppError, the single error type.
 ├── i18n/          Every text of the interface, in each supported language.
+├── launch/        Launch modes and the restart in the background (--background).
 ├── paths/         Where the application and its data live.
 ├── settings/      User preferences kept between launches (settings.toml).
 ├── storage/       Reading/writing activities in user_activity/.
@@ -40,7 +41,8 @@ Dependencies only point "downwards": `ui` uses `i18n`, `settings`,
   and re-exports, and its `//!` comment describes the module.
 - **Every item is documented** in English. `missing_docs` is a warning and
   Clippy runs in pedantic mode; CI treats warnings as errors.
-- **No `unsafe`** (`unsafe_code = "forbid"`), no `unwrap()`/`expect()` in
+- **No `unsafe`** (`unsafe_code = "deny"`, with one documented exception:
+  `wait_for_tray_message`), no `unwrap()`/`expect()` in
   `src/`: failures become an `AppError` shown to the user.
 - **Explicit paths.** Storage functions receive the folders they work on,
   which makes them independent of the installation mode and easy to test with
@@ -135,39 +137,72 @@ missing translation is a compile error. Views receive `&Translations`
    `translations_for`.
 4. Run `cargo test`: the translation tests list any problem.
 
-## System tray
+## System tray and background mode
 
 Because Discord drops the presence when the process exits, the application
-can keep running with its window hidden behind a notification area icon,
-built with the [`tray-icon`](https://crates.io/crates/tray-icon) crate
-(default features disabled: on Windows it only needs the Win32 API).
+keeps running behind a notification area icon, built with the
+[`tray-icon`](https://crates.io/crates/tray-icon) crate (default features
+disabled: on Windows it only needs the Win32 API).
+
+### Keeping the memory use minimal
+
+The window is drawn with OpenGL. Once a window has been shown, the graphics
+driver keeps tens of megabytes until the process ends, **even after the
+window and its context are destroyed** (measured: about 40 MB with an NVIDIA
+driver). Hiding the window, or even destroying it, is therefore not enough.
+`run_app` instead works like this:
 
 ```text
- tray icon ── TrayCommand (channel + request_repaint) ──▶ poll_tray_commands ──▶ UiAction
+  normal start ─▶ window ── closed while an activity is shown ──▶ new process
+                    ▲                                             --background
+                    └──────────── click on the tray icon ◀────────────┘
+```
+
+- When the window is closed while an activity is displayed
+  (`WindowExit::HideToTray`), `spawn_background_process` starts a new copy of
+  the executable with `--background --activity <folder> --started-at <ms>`
+  (`launch` module), then the current process exits.
+- The background process (`LaunchMode::Background`) never creates a window:
+  it loads the activities, resumes the activity with the same timer start
+  (`resume_presence`) and waits in `wait_in_tray`. It uses about 2 MB.
+- A click on the icon opens the window in that same process (`run_window`);
+  closing it again hands over to yet another fresh process.
+- If the new process cannot be started, the current one simply keeps
+  running behind the icon (`wait_in_tray`), with a higher memory use.
+
+Each window is a `WindowSession` borrowing the `PresenceApp`, with its own
+egui context. The context is published in `PresenceApp::repaint_target` so
+the presence worker and the tray icon can wake the window up
+(`repaint_window`); it is `None` while no window exists.
+
+### Tray events
+
+```text
+ tray icon ── TrayCommand (channel + repaint_window) ──▶ poll_tray_commands ──▶ UiAction
  PresenceApp ── build_tray_menu_model ──▶ TrayMenuModel ── (changed?) ──▶ build_tray_menu
 ```
 
-- `create_presence_app` adds the icon (`create_system_tray`) once the event
-  loop runs. `build_presence_app` does not, so tests never touch the
-  notification area; `PresenceApp::tray` is `None` there, and also when
-  Windows refuses the icon, in which case the application behaves as before.
-- Menu clicks and left clicks on the icon arrive on the event loop thread.
-  The handlers only send a `TrayCommand` on a channel and call
-  `request_repaint`; eframe keeps running frames for hidden windows when a
-  repaint is requested, so commands are applied even while the window is
-  hidden. `poll_tray_commands` turns them into ordinary `UiAction`s
-  (`ShowWindow`, `StartActivity`, `StopPresence`, `Quit`).
-- Every frame, `sync_tray_menu` describes the menu as a plain
-  `TrayMenuModel` (activities, displayed one, tooltip) and rebuilds the
-  native menu only when the description changed.
+- `create_presence_app` adds the icon (`create_system_tray`).
+  `build_presence_app` does not, so tests never touch the notification area;
+  `PresenceApp::tray` is `None` there, and also when Windows refuses the
+  icon, in which case closing the window simply quits.
+- Menu clicks and left clicks on the icon only send a `TrayCommand` on a
+  channel and wake the window. `poll_tray_commands` turns them into ordinary
+  `UiAction`s (`ShowWindow`, `StartActivity`, `StopPresence`, `Quit`). With
+  a window, `apply_action` applies them; without one, `handle_tray_action`
+  does.
+- Without a window there is no event loop: `wait_for_tray_message` receives
+  the Windows messages of the icon's hidden window (`GetMessageW` /
+  `DispatchMessageW`). It is the only `unsafe` code of the project, allowed
+  in that single function and documented with `SAFETY` comments.
+- `sync_tray_menu` describes the menu as a plain `TrayMenuModel`
+  (activities, displayed one, tooltip, language) and rebuilds the native
+  menu only when the description changed.
 - `detect_hide_to_tray` turns a close or minimise request into
   `UiAction::HideToTray` when `keeps_running_in_tray` holds: a tray icon
   exists, an activity is displayed and the user did not choose **Quit**.
-  `hide_to_tray` cancels the close and hides the window; `show_window`
-  shows, restores and focuses it.
-- **Quit** sets `quit_requested` and closes the window, so the regular
-  `on_exit` path runs `shutdown_presence_worker` (clearing the presence)
-  and drops the tray icon.
+- **Quit** sets `WindowExit::Quit` and closes the window; `run_app` then
+  runs `shutdown_presence_worker` (clearing the presence) and drops the icon.
 
 ## Adding a field to activities
 

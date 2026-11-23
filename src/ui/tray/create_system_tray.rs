@@ -2,18 +2,21 @@
 
 use std::sync::mpsc;
 
-use eframe::egui;
+use std::sync::Arc;
+
 use tray_icon::menu::MenuEvent;
 use tray_icon::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent};
 
 use crate::constants::APP_DISPLAY_NAME;
 use crate::error::AppError;
+use crate::ui::repaint_window;
+use crate::ui::state::RepaintTarget;
 use crate::ui::tray::{SystemTray, TrayCommand, load_tray_icon};
 
 /// Adds the application icon to the notification area.
 ///
 /// Menu clicks, and left clicks on the icon (which show the window), are
-/// sent as [`TrayCommand`]s and wake the interface through `context`, even
+/// sent as [`TrayCommand`]s and wake the window through `repaint_target`, even
 /// while the window is hidden. The menu itself is installed by
 /// [`sync_tray_menu`](crate::ui::actions::sync_tray_menu).
 ///
@@ -24,19 +27,19 @@ use crate::ui::tray::{SystemTray, TrayCommand, load_tray_icon};
 ///
 /// Returns [`AppError::Tray`] when the operating system refuses to create
 /// the icon.
-pub fn create_system_tray(context: &egui::Context) -> Result<SystemTray, AppError> {
+pub fn create_system_tray(repaint_target: &RepaintTarget) -> Result<SystemTray, AppError> {
     let (sender, commands) = mpsc::channel();
 
     let menu_sender = sender.clone();
-    let menu_context = context.clone();
+    let menu_target = Arc::clone(repaint_target);
     MenuEvent::set_event_handler(Some(move |event: MenuEvent| {
         if let Some(command) = TrayCommand::from_menu_id(event.id.as_ref()) {
             let _ = menu_sender.send(command);
-            menu_context.request_repaint();
+            repaint_window(&menu_target);
         }
     }));
 
-    let icon_context = context.clone();
+    let icon_target = Arc::clone(repaint_target);
     TrayIconEvent::set_event_handler(Some(move |event: TrayIconEvent| {
         let shows_window = matches!(
             event,
@@ -51,7 +54,7 @@ pub fn create_system_tray(context: &egui::Context) -> Result<SystemTray, AppErro
         );
         if shows_window {
             let _ = sender.send(TrayCommand::ShowWindow);
-            icon_context.request_repaint();
+            repaint_window(&icon_target);
         }
     }));
 

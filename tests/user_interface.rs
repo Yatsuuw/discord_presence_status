@@ -12,7 +12,7 @@ fn harness(activities: &std::path::Path) -> Harness<'static, PresenceApp> {
     Harness::builder()
         .with_size([900.0, 640.0])
         .build_eframe(move |creation_context| {
-            build_presence_app(&creation_context.egui_ctx, &folder).expect("build the app")
+            build_presence_app(Some(&creation_context.egui_ctx), &folder).expect("build the app")
         })
 }
 

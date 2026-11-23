@@ -9,7 +9,9 @@
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
-    match discord_presence_status::ui::run_app() {
+    let launch_mode =
+        discord_presence_status::launch::parse_launch_mode(std::env::args_os().skip(1));
+    match discord_presence_status::ui::run_app(launch_mode) {
         Ok(()) => ExitCode::SUCCESS,
         Err(error) => {
             eprintln!("Discord Presence Status failed to start: {error}");

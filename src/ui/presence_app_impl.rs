@@ -5,7 +5,7 @@ use std::time::Duration;
 use eframe::egui::{self, CentralPanel, Panel};
 
 use crate::i18n::translations_for;
-use crate::presence::{PresenceStatus, shutdown_presence_worker};
+use crate::presence::PresenceStatus;
 use crate::ui::UiAction;
 use crate::ui::actions::{apply_action, poll_presence_status, poll_tray_commands, sync_tray_menu};
 use crate::ui::state::{Dialog, PresenceApp};
@@ -82,16 +82,8 @@ impl eframe::App for PresenceApp {
 
         sync_tray_menu(self);
 
-        // The timer is only visible in the window: no need to refresh it
-        // while the window is hidden to the tray.
-        if matches!(self.status, PresenceStatus::Active { .. }) && !self.window_hidden {
+        if matches!(self.status, PresenceStatus::Active { .. }) {
             ui.ctx().request_repaint_after(TIMER_REFRESH);
         }
-    }
-
-    fn on_exit(&mut self, _gl: Option<&eframe::glow::Context>) {
-        shutdown_presence_worker(&mut self.presence);
-        // Remove the icon from the notification area right away.
-        self.tray = None;
     }
 }

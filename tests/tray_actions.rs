@@ -6,9 +6,11 @@ use std::sync::mpsc;
 use discord_presence_status::activity::Activity;
 use discord_presence_status::presence::{PresenceCommand, PresenceHandle};
 use discord_presence_status::storage::save_activity;
-use discord_presence_status::ui::actions::{apply_action, poll_tray_commands, reload_activities};
+use discord_presence_status::ui::actions::{
+    apply_action, handle_tray_action, poll_tray_commands, reload_activities,
+};
 use discord_presence_status::ui::state::{
-    ActivePresence, NoticeKind, PresenceApp, keeps_running_in_tray,
+    ActivePresence, NoticeKind, PresenceApp, TrayWakeUp, WindowExit, keeps_running_in_tray,
 };
 use discord_presence_status::ui::views::detect_hide_to_tray;
 use discord_presence_status::ui::{UiAction, build_presence_app};
@@ -20,7 +22,7 @@ fn app_with_fake_worker(
     context: &egui::Context,
     folder: &Path,
 ) -> (PresenceApp, mpsc::Receiver<PresenceCommand>) {
-    let mut app = build_presence_app(context, folder).expect("build the app");
+    let mut app = build_presence_app(Some(context), folder).expect("build the app");
     let (commands, received) = mpsc::channel();
     let (_statuses_sender, statuses) = mpsc::channel();
     app.presence = PresenceHandle {
@@ -99,18 +101,28 @@ fn reports_an_activity_that_no_longer_exists() {
 }
 
 #[test]
-fn hides_and_shows_the_window() {
+fn hiding_closes_the_window_for_real() {
     let root = tempfile::tempdir().expect("temporary folder");
     let context = egui::Context::default();
     let (mut app, _received) = app_with_fake_worker(&context, root.path());
 
     let commands = apply_in_frame(&context, &mut app, UiAction::HideToTray);
-    assert!(app.window_hidden);
-    assert!(commands.contains(&ViewportCommand::CancelClose));
-    assert!(commands.contains(&ViewportCommand::Visible(false)));
+
+    // The window is destroyed (not hidden) to free its graphics memory.
+    assert_eq!(app.window_exit, Some(WindowExit::HideToTray));
+    assert!(commands.contains(&ViewportCommand::Close));
+    assert!(!commands.contains(&ViewportCommand::CancelClose));
+}
+
+#[test]
+fn brings_an_open_window_to_the_front() {
+    let root = tempfile::tempdir().expect("temporary folder");
+    let context = egui::Context::default();
+    let (mut app, _received) = app_with_fake_worker(&context, root.path());
 
     let commands = apply_in_frame(&context, &mut app, UiAction::ShowWindow);
-    assert!(!app.window_hidden);
+
+    assert_eq!(app.window_exit, None);
     assert!(commands.contains(&ViewportCommand::Visible(true)));
     assert!(commands.contains(&ViewportCommand::Minimized(false)));
     assert!(commands.contains(&ViewportCommand::Focus));
@@ -128,9 +140,44 @@ fn quit_closes_the_window_for_real() {
 
     let commands = apply_in_frame(&context, &mut app, UiAction::Quit);
 
-    assert!(app.quit_requested);
+    assert_eq!(app.window_exit, Some(WindowExit::Quit));
     assert!(commands.contains(&ViewportCommand::Close));
     assert!(!keeps_running_in_tray(&app));
+}
+
+#[test]
+fn tray_choices_without_a_window_wake_up_or_act_directly() {
+    let root = tempfile::tempdir().expect("temporary folder");
+    let context = egui::Context::default();
+    let (mut app, received) = app_with_fake_worker(&context, root.path());
+    let activity = Activity {
+        name: "Coding".to_owned(),
+        application_id: "123456789012345678".to_owned(),
+        ..Activity::default()
+    };
+    let stored = save_activity(&app.activities_directory, activity, None, None).expect("save");
+    reload_activities(&mut app);
+
+    assert_eq!(
+        handle_tray_action(&mut app, UiAction::ShowWindow),
+        Some(TrayWakeUp::ShowWindow)
+    );
+    assert_eq!(
+        handle_tray_action(&mut app, UiAction::Quit),
+        Some(TrayWakeUp::Quit)
+    );
+
+    let started = handle_tray_action(&mut app, UiAction::StartActivity(stored.folder.clone()));
+    assert_eq!(started, None);
+    assert!(matches!(received.try_recv(), Ok(PresenceCommand::Show(_))));
+    assert_eq!(
+        app.active.as_ref().map(|active| &active.folder),
+        Some(&stored.folder)
+    );
+
+    assert_eq!(handle_tray_action(&mut app, UiAction::StopPresence), None);
+    assert!(matches!(received.try_recv(), Ok(PresenceCommand::Clear)));
+    assert!(app.active.is_none());
 }
 
 #[test]

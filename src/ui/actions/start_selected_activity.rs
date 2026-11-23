@@ -2,6 +2,7 @@
 
 use eframe::egui;
 
+use crate::presence::current_unix_millis;
 use crate::ui::actions::{display_activity, save_draft};
 use crate::ui::state::PresenceApp;
 
@@ -11,6 +12,6 @@ use crate::ui::state::PresenceApp;
 /// replaced.
 pub fn start_selected_activity(app: &mut PresenceApp, context: &egui::Context) {
     if let Some(stored) = save_draft(app, context) {
-        display_activity(app, stored);
+        display_activity(app, stored, current_unix_millis());
     }
 }

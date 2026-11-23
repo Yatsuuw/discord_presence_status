@@ -10,6 +10,10 @@ mod notice;
 mod notice_kind;
 mod optional_text;
 mod presence_app;
+mod presence_handover_of;
+mod repaint_target;
+mod tray_wake_up;
+mod window_exit;
 
 pub use active_presence::ActivePresence;
 pub use activity_draft::ActivityDraft;
@@ -21,3 +25,7 @@ pub use notice::Notice;
 pub use notice_kind::NoticeKind;
 pub use optional_text::optional_text;
 pub use presence_app::PresenceApp;
+pub use presence_handover_of::presence_handover_of;
+pub use repaint_target::RepaintTarget;
+pub use tray_wake_up::TrayWakeUp;
+pub use window_exit::WindowExit;

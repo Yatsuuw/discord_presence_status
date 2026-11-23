@@ -10,6 +10,7 @@
 //! | [`constants`]| Application-wide constant values.                         |
 //! | [`error`]    | The single error type shared by the whole application.    |
 //! | [`i18n`]     | Translation of every text of the interface.               |
+//! | [`launch`]   | Launch modes and the restart in the background.          |
 //! | [`paths`]    | Where the application and its data live on disk.          |
 //! | [`storage`]  | Reading and writing activities in `user_activity/`.       |
 //! | [`presence`] | The background worker talking to the Discord client.      |
@@ -20,6 +21,7 @@ pub mod activity;
 pub mod constants;
 pub mod error;
 pub mod i18n;
+pub mod launch;
 pub mod paths;
 pub mod presence;
 pub mod settings;

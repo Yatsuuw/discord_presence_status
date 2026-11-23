@@ -1,14 +1,17 @@
-//! Display of the main window from the tray.
+//! Bringing the open window to the front.
 
 use eframe::egui::{self, ViewportCommand};
 
 use crate::ui::state::PresenceApp;
 
-/// Shows the main window again, restores it if it was minimised and brings
-/// it to the front.
+/// Restores and focuses the window when the tray icon is clicked while the
+/// window is open (for example minimised behind other windows).
+///
+/// When the window is closed, [`run_app`](crate::ui::run_app) creates a new
+/// one instead.
 pub fn show_window(app: &mut PresenceApp, context: &egui::Context) {
+    app.window_exit = None;
     context.send_viewport_cmd(ViewportCommand::Visible(true));
     context.send_viewport_cmd(ViewportCommand::Minimized(false));
     context.send_viewport_cmd(ViewportCommand::Focus);
-    app.window_hidden = false;
 }

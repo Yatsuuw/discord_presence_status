@@ -6,6 +6,13 @@ and the project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+- Behind the tray icon, the application now uses about 2 MB of memory instead
+  of about 60 MB: the window is closed for real and the displayed activity is
+  handed over, with its timer, to a lightweight background process that never
+  uses the graphics card. The window reopens from the tray icon as before.
+
 ## [0.3.0] - 2026-11-23
 
 ### Added

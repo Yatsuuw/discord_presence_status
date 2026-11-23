@@ -95,6 +95,10 @@ system tray, next to the clock; it may be hidden behind the **^** arrow).
 - **When no activity is displayed**, closing the window quits the application
   and minimising works as usual.
 
+Behind the tray icon, the application uses only about 2 MB of memory: the
+window is closed for real and the graphics memory is given back to Windows.
+Reopening the window takes a fraction of a second.
+
 Left-click the tray icon to bring the window back. Right-click it for the
 menu:
 
